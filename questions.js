@@ -127,7 +127,131 @@ const QUESTIONS = {
       }
     ]
   },
-  world_geography: { label: "세계지리", items: [] },
+  world_geography: {
+    label: "세계지리",
+    items: [
+      {
+        id: "wg-01",
+        question: "외교부 국가정보에 적힌 오스트레일리아(호주연방)의 수도는?",
+        choices: ["시드니", "멜버른", "캔버라", "브리즈번"],
+        answerIndex: 2,
+        explanation: "연방정부와 국회가 있는 행정 중심지는 캔버라다.",
+        source: {
+          title: "외교부 국가정보 — 호주연방",
+          url: "https://www.mofa.go.kr/www/nation/m_3458/view.do?seq=41",
+          checkedAt: "2026-10-12"
+        }
+      },
+      {
+        id: "wg-02",
+        question: "외교부 국가정보에 적힌 브라질연방공화국의 언어는?",
+        choices: ["에스파냐어", "포르투갈어", "프랑스어", "영어"],
+        answerIndex: 1,
+        explanation: "남아메리카에서 브라질만 포르투갈어를 쓴다.",
+        source: {
+          title: "외교부 국가정보 — 브라질연방공화국",
+          url: "https://www.mofa.go.kr/www/nation/m_3458/view.do?seq=56",
+          checkedAt: "2026-10-12"
+        }
+      },
+      {
+        id: "wg-03",
+        question: "외교부 국가정보에 적힌 이집트아랍공화국의 수도는?",
+        choices: ["알렉산드리아", "카이로", "룩소르", "아스완"],
+        answerIndex: 1,
+        explanation: "수도는 카이로이고, 국토의 95%가 사막이라고 적혀 있다.",
+        source: {
+          title: "외교부 국가정보 — 이집트아랍공화국",
+          url: "https://www.mofa.go.kr/www/nation/m_3458/view.do?seq=168",
+          checkedAt: "2026-10-12"
+        }
+      },
+      {
+        id: "wg-04",
+        question: "안데스산맥과 아마존 분지가 만나는 곳에 있는 잉카 유적 마추픽추는 어느 나라에 있는가?",
+        choices: ["페루", "볼리비아", "칠레", "멕시코"],
+        answerIndex: 0,
+        explanation: "해발 2,430m 페루 안데스 동쪽 사면에 있는 세계유산이다.",
+        source: {
+          title: "UNESCO 세계유산 — Historic Sanctuary of Machu Picchu",
+          url: "https://whc.unesco.org/en/list/274",
+          checkedAt: "2026-10-12"
+        }
+      },
+      {
+        id: "wg-05",
+        question: "시베리아 남동부에 있으며 지구 담수의 20%를 담고 있다는 호수는?",
+        choices: ["카스피해", "바이칼호", "아랄해", "발하슈호"],
+        answerIndex: 1,
+        explanation: "러시아 바이칼호는 깊이 1,700m로, 세계 담수의 20%를 담고 있다.",
+        source: {
+          title: "UNESCO 세계유산 — Lake Baikal",
+          url: "https://whc.unesco.org/en/list/754",
+          checkedAt: "2026-10-12"
+        }
+      },
+      {
+        id: "wg-06",
+        question: "남아메리카 해안에서 약 1,000km 떨어진 갈라파고스 제도를 영토로 둔 나라는?",
+        choices: ["에콰도르", "페루", "콜롬비아", "코스타리카"],
+        answerIndex: 0,
+        explanation: "에콰도르 본토에서 약 1,000km 떨어진 화산섬 제도다.",
+        source: {
+          title: "UNESCO 세계유산 — Galápagos Islands",
+          url: "https://whc.unesco.org/en/list/1",
+          checkedAt: "2026-10-12"
+        }
+      },
+      {
+        id: "wg-07",
+        question: "빅토리아 폭포(모시 오아 툰야)를 이루며 떨어지는 강은?",
+        choices: ["나일강", "콩고강", "잠베지강", "니제르강"],
+        answerIndex: 2,
+        explanation: "폭포 지점에서 폭 2km가 넘는 잠베지강이 현무암 협곡으로 떨어진다.",
+        source: {
+          title: "UNESCO 세계유산 — Mosi-oa-Tunya / Victoria Falls",
+          url: "https://whc.unesco.org/en/list/509",
+          checkedAt: "2026-10-12"
+        }
+      },
+      {
+        id: "wg-08",
+        question: "누 떼의 이동으로 알려진 세렝게티 국립공원이 있는 나라는?",
+        choices: ["케냐", "탄자니아", "우간다", "보츠와나"],
+        answerIndex: 1,
+        explanation: "유네스코는 소재 국가를 탄자니아연합공화국으로 적고 있다.",
+        source: {
+          title: "UNESCO 세계유산 — Serengeti National Park",
+          url: "https://whc.unesco.org/en/list/156",
+          checkedAt: "2026-10-12"
+        }
+      },
+      {
+        id: "wg-09",
+        question: "산호 400종이 사는 그레이트배리어리프가 펼쳐진 나라는?",
+        choices: ["인도네시아", "필리핀", "오스트레일리아", "멕시코"],
+        answerIndex: 2,
+        explanation: "오스트레일리아 북동 해안을 따라 이어진 산호초 지대다.",
+        source: {
+          title: "UNESCO 세계유산 — Great Barrier Reef",
+          url: "https://whc.unesco.org/en/list/154",
+          checkedAt: "2026-10-12"
+        }
+      },
+      {
+        id: "wg-10",
+        question: "미국 애리조나주의 그랜드캐니언을 깎아 낸 강은?",
+        choices: ["미시시피강", "리오그란데강", "콜로라도강", "컬럼비아강"],
+        answerIndex: 2,
+        explanation: "콜로라도강이 깎아 낸 깊이 약 1,500m의 협곡이다.",
+        source: {
+          title: "UNESCO 세계유산 — Grand Canyon National Park",
+          url: "https://whc.unesco.org/en/list/75",
+          checkedAt: "2026-10-12"
+        }
+      }
+    ]
+  },
   science: { label: "과학", items: [] },
   arts_culture: { label: "예술과 문화", items: [] }
 };
