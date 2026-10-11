@@ -377,5 +377,129 @@ const QUESTIONS = {
       }
     ]
   },
-  arts_culture: { label: "예술과 문화", items: [] }
+  arts_culture: {
+    label: "예술과 문화",
+    items: [
+      {
+        id: "ac-01",
+        question: "유네스코 세계유산 목록에 1995년에 등재된 우리 유산은?",
+        choices: ["창덕궁", "수원 화성", "석굴암과 불국사", "경주역사유적지구"],
+        answerIndex: 2,
+        explanation: "1995년에 석굴암·불국사, 종묘, 해인사 장경판전이 함께 등재되었다.",
+        source: {
+          title: "UNESCO 세계유산 — 대한민국 등재 목록",
+          url: "https://whc.unesco.org/en/statesparties/kr",
+          checkedAt: "2026-10-12"
+        }
+      },
+      {
+        id: "ac-02",
+        question: "조선의 궁궐 창덕궁이 유네스코 세계유산 목록에 오른 해는?",
+        choices: ["1995년", "1997년", "2000년", "2007년"],
+        answerIndex: 1,
+        explanation: "1997년에 창덕궁과 수원 화성이 함께 등재되었다.",
+        source: {
+          title: "UNESCO 세계유산 — 대한민국 등재 목록",
+          url: "https://whc.unesco.org/en/statesparties/kr",
+          checkedAt: "2026-10-12"
+        }
+      },
+      {
+        id: "ac-03",
+        question: "우리나라 세계자연유산 가운데 2007년에 등재된 것은?",
+        choices: ["한국의 갯벌", "제주 화산섬과 용암동굴", "설악산 천연보호구역", "순천만"],
+        answerIndex: 1,
+        explanation: "우리 자연유산은 제주 화산섬과 용암동굴(2007), 한국의 갯벌 둘이다.",
+        source: {
+          title: "UNESCO 세계유산 — 대한민국 등재 목록",
+          url: "https://whc.unesco.org/en/statesparties/kr",
+          checkedAt: "2026-10-12"
+        }
+      },
+      {
+        id: "ac-04",
+        question: "2026년 10월 기준으로 유네스코 세계유산 목록에 오른 우리나라 유산은 몇 건인가?",
+        choices: ["12건", "15건", "17건", "21건"],
+        answerIndex: 2,
+        explanation: "문화유산 15건과 자연유산 2건을 더해 17건이다.",
+        source: {
+          title: "UNESCO 세계유산 — 대한민국 등재 목록",
+          url: "https://whc.unesco.org/en/statesparties/kr",
+          checkedAt: "2026-10-12"
+        }
+      },
+      {
+        id: "ac-05",
+        question: "유네스코 인류무형문화유산에 '종묘의 왕실 조상 제례와 그 음악'으로 등재된 우리 유산은?",
+        choices: ["종묘제례악", "영산재", "처용무", "강릉단오제"],
+        answerIndex: 0,
+        explanation: "2001년에 선포되고 2008년에 대표목록으로 옮겨 등재되었다.",
+        source: {
+          title: "UNESCO 무형유산 — Royal ancestral ritual in the Jongmyo shrine and its music",
+          url: "https://ich.unesco.org/en/RL/royal-ancestral-ritual-in-the-jongmyo-shrine-and-its-music-00016",
+          checkedAt: "2026-10-12"
+        }
+      },
+      {
+        id: "ac-06",
+        question: "민요 아리랑이 유네스코 인류무형문화유산 대표목록에 오른 해는?",
+        choices: ["2003년", "2008년", "2012년", "2016년"],
+        answerIndex: 2,
+        explanation: "2012년 제7차 무형유산위원회에서 대표목록에 등재되었다.",
+        source: {
+          title: "UNESCO 무형유산 — Arirang, lyrical folk song in the Republic of Korea",
+          url: "https://ich.unesco.org/en/RL/arirang-lyrical-folk-song-in-the-republic-of-korea-00445",
+          checkedAt: "2026-10-12"
+        }
+      },
+      {
+        id: "ac-07",
+        question: "김치를 담그고 나누는 문화로 2013년 유네스코 인류무형문화유산에 등재된 것은?",
+        choices: ["한식", "장 담그기", "김장문화", "떡 만들기"],
+        answerIndex: 2,
+        explanation: "'김장, 김치를 담그고 나누기'라는 이름으로 2013년에 등재되었다.",
+        source: {
+          title: "UNESCO 무형유산 — Kimjang, making and sharing kimchi in the Republic of Korea",
+          url: "https://ich.unesco.org/en/RL/kimjang-making-and-sharing-kimchi-in-the-republic-of-korea-00881",
+          checkedAt: "2026-10-12"
+        }
+      },
+      {
+        id: "ac-08",
+        question: "레오나르도 다빈치가 그린 '모나리자'를 소장하고 있는 곳은?",
+        choices: ["오르세 미술관", "루브르 박물관", "우피치 미술관", "프라도 미술관"],
+        answerIndex: 1,
+        explanation: "루브르 박물관 회화부 소장품이며 원제는 '라 조콩드'다.",
+        source: {
+          title: "Louvre Collections — La Joconde (Mona Lisa)",
+          url: "https://collections.louvre.fr/en/ark:/53355/cl010062370",
+          checkedAt: "2026-10-12"
+        }
+      },
+      {
+        id: "ac-09",
+        question: "빈센트 반 고흐가 1889년에 그린 '별이 빛나는 밤'을 소장한 곳은?",
+        choices: ["뉴욕 현대미술관(MoMA)", "오르세 미술관", "반 고흐 미술관", "구겐하임 미술관"],
+        answerIndex: 0,
+        explanation: "1889년 6월 생레미에서 그렸고 뉴욕 현대미술관이 소장한다.",
+        source: {
+          title: "MoMA — Vincent van Gogh, The Starry Night",
+          url: "https://www.moma.org/collection/works/79802",
+          checkedAt: "2026-10-12"
+        }
+      },
+      {
+        id: "ac-10",
+        question: "네덜란드 마우리츠하위스 미술관에 있는 '진주 귀고리를 한 소녀'를 그린 화가는?",
+        choices: ["렘브란트", "프란스 할스", "얀 반 에이크", "요하네스 베르메르"],
+        answerIndex: 3,
+        explanation: "헤이그 마우리츠하위스가 소장한 요하네스 베르메르의 그림이다.",
+        source: {
+          title: "Mauritshuis — Johannes Vermeer, Girl with a Pearl Earring",
+          url: "https://www.mauritshuis.nl/en/our-collection/artworks/670-girl-with-a-pearl-earring/",
+          checkedAt: "2026-10-12"
+        }
+      }
+    ]
+  }
 };
