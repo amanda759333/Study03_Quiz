@@ -252,6 +252,130 @@ const QUESTIONS = {
       }
     ]
   },
-  science: { label: "과학", items: [] },
+  science: {
+    label: "과학",
+    items: [
+      {
+        id: "sc-01",
+        question: "수증기를 뺀 건조 공기를 기준으로, 지구 대기에서 부피 비율 78.08%를 차지하는 기체는?",
+        choices: ["산소", "질소", "아르곤", "이산화탄소"],
+        answerIndex: 1,
+        explanation: "건조 공기는 질소 78.08%, 산소 20.95%로 이루어져 있다.",
+        source: {
+          title: "NASA — Earth Fact Sheet",
+          url: "https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html",
+          checkedAt: "2026-10-12"
+        }
+      },
+      {
+        id: "sc-02",
+        question: "NASA가 태양계의 행성으로 꼽는 천체는 모두 몇 개인가?",
+        choices: ["7개", "8개", "9개", "12개"],
+        answerIndex: 1,
+        explanation: "수성·금성·지구·화성·목성·토성·천왕성·해왕성 8개다.",
+        source: {
+          title: "NASA — Planets",
+          url: "https://science.nasa.gov/solar-system/planets/",
+          checkedAt: "2026-10-12"
+        }
+      },
+      {
+        id: "sc-03",
+        question: "NASA 행성 비교표에서 표면 평균 온도가 464°C로 적힌 행성은?",
+        choices: ["수성", "금성", "화성", "목성"],
+        answerIndex: 1,
+        explanation: "두꺼운 이산화탄소 대기 때문에 금성이 464°C로 가장 뜨겁다.",
+        source: {
+          title: "NASA — Planetary Fact Sheet",
+          url: "https://nssdc.gsfc.nasa.gov/planetary/factsheet/",
+          checkedAt: "2026-10-12"
+        }
+      },
+      {
+        id: "sc-04",
+        question: "NASA 행성 비교표에서 지름이 142,984km로 적힌 행성은?",
+        choices: ["토성", "해왕성", "목성", "천왕성"],
+        answerIndex: 2,
+        explanation: "목성의 지름은 142,984km로 지구의 11배가 넘는다.",
+        source: {
+          title: "NASA — Planetary Fact Sheet",
+          url: "https://nssdc.gsfc.nasa.gov/planetary/factsheet/",
+          checkedAt: "2026-10-12"
+        }
+      },
+      {
+        id: "sc-05",
+        question: "NASA 행성 비교표에 적힌 화성의 하루 길이는?",
+        choices: ["9.9시간", "24.7시간", "58.6일", "243일"],
+        answerIndex: 1,
+        explanation: "화성의 하루는 24.7시간으로 지구의 하루와 비슷하다.",
+        source: {
+          title: "NASA — Planetary Fact Sheet",
+          url: "https://nssdc.gsfc.nasa.gov/planetary/factsheet/",
+          checkedAt: "2026-10-12"
+        }
+      },
+      {
+        id: "sc-06",
+        question: "지구와 달 사이의 평균 거리는 약 얼마인가?",
+        choices: ["3만 8,440km", "38만 4,400km", "150만km", "1,496만km"],
+        answerIndex: 1,
+        explanation: "달 궤도의 반지름은 0.3844×10⁶km, 곧 약 38만 4,400km다.",
+        source: {
+          title: "NASA — Moon Fact Sheet",
+          url: "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",
+          checkedAt: "2026-10-12"
+        }
+      },
+      {
+        id: "sc-07",
+        question: "국제 단위계가 정한 진공에서의 빛의 속도 값은?",
+        choices: ["299,792,458 m/s", "300,000,000 m/s", "29,979,245 m/s", "343 m/s"],
+        answerIndex: 0,
+        explanation: "오차 없이 정확한 값으로 정해진 상수이며 단위는 m/s다.",
+        source: {
+          title: "NIST — Speed of light in vacuum (CODATA)",
+          url: "https://physics.nist.gov/cgi-bin/cuu/Value?c",
+          checkedAt: "2026-10-12"
+        }
+      },
+      {
+        id: "sc-08",
+        question: "DNA를 이루는 네 염기는 아데닌, 시토신, 구아닌과 무엇인가?",
+        choices: ["우라실", "티민", "리보스", "인산"],
+        answerIndex: 1,
+        explanation: "DNA는 A·C·G·T 네 염기로 이루어진다. 우라실은 RNA에 쓰인다.",
+        source: {
+          title: "NHGRI — Deoxyribonucleic Acid (DNA)",
+          url: "https://www.genome.gov/genetics-glossary/Deoxyribonucleic-Acid",
+          checkedAt: "2026-10-12"
+        }
+      },
+      {
+        id: "sc-09",
+        question: "우리나라 기상청은 중심 부근 바람이 초속 몇 m 이상인 열대저기압을 태풍이라 부르는가?",
+        choices: ["10m/s", "17m/s", "25m/s", "33m/s"],
+        answerIndex: 1,
+        explanation: "한국과 일본은 17㎧ 이상, 세계기상기구는 33㎧ 이상을 기준으로 쓴다.",
+        source: {
+          title: "기상청 — 태풍 기본지식",
+          url: "https://www.weather.go.kr/w/hazard/typhoon/basic/info1.do",
+          checkedAt: "2026-10-12"
+        }
+      },
+      {
+        id: "sc-10",
+        question: "NASA 자료에 적힌 태양의 유효 온도(표면 온도)는?",
+        choices: ["1,000K", "5,772K", "15,000K", "1,500만K"],
+        answerIndex: 1,
+        explanation: "표면의 유효 온도는 5,772K이고, 1,500만K는 중심부 온도다.",
+        source: {
+          title: "NASA — Sun Fact Sheet",
+          url: "https://nssdc.gsfc.nasa.gov/planetary/factsheet/sunfact.html",
+          checkedAt: "2026-10-12"
+        }
+      }
+    ]
+  },
   arts_culture: { label: "예술과 문화", items: [] }
 };
