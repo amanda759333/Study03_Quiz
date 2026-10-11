@@ -37,6 +37,58 @@ function shuffle(array, random = Math.random) {
   return copy;
 }
 
+// PRD 4.3. 손으로 고치는 데이터이므로 오타를 조용히 넘기지 않는다.
+function validateQuestions(data) {
+  const warnings = [];
+
+  if (!data || typeof data !== "object") {
+    warnings.push("QUESTIONS가 객체가 아닙니다");
+    return warnings;
+  }
+
+  const keys = Object.keys(data);
+  if (keys.length !== 4) warnings.push(`카테고리가 4개가 아닙니다: ${keys.length}개`);
+  for (const key of CATEGORY_ORDER) {
+    if (!keys.includes(key)) warnings.push(`카테고리 ${key}가 없습니다`);
+  }
+
+  for (const key of keys) {
+    const category = data[key];
+    if (!category || !Array.isArray(category.items)) {
+      warnings.push(`${key}: items 배열이 없습니다`);
+      continue;
+    }
+    if (!category.label) warnings.push(`${key}: label이 비어 있습니다`);
+    if (category.items.length !== QUESTIONS_PER_ROUND) {
+      warnings.push(`${key}: 문항이 ${QUESTIONS_PER_ROUND}개가 아닙니다 (${category.items.length}개)`);
+    }
+    category.items.forEach((item, i) => {
+      const at = item && item.id ? item.id : `${key}[${i}]`;
+      if (!item || typeof item !== "object") {
+        warnings.push(`${at}: 문항이 객체가 아닙니다`);
+        return;
+      }
+      if (!item.question) warnings.push(`${at}: question이 비어 있습니다`);
+      if (!Array.isArray(item.choices) || item.choices.length !== 4) {
+        warnings.push(`${at}: 보기가 4개가 아닙니다`);
+      } else if (new Set(item.choices).size !== 4) {
+        warnings.push(`${at}: 보기 4개가 서로 다르지 않습니다`);
+      }
+      if (!Number.isInteger(item.answerIndex) || item.answerIndex < 0 || item.answerIndex > 3) {
+        warnings.push(`${at}: answerIndex가 0~3 범위의 정수가 아닙니다`);
+      }
+      if (!item.explanation) warnings.push(`${at}: explanation이 비어 있습니다`);
+      if (!item.source || !item.source.url) warnings.push(`${at}: source.url이 비어 있습니다`);
+    });
+  }
+
+  return warnings;
+}
+
+function reportDataWarnings(warnings) {
+  for (const message of warnings) console.warn(`[quiz] 데이터 경고: ${message}`);
+}
+
 // ===== 3. 자체 점검 =====
 const SELF_TESTS = [];
 
@@ -107,6 +159,36 @@ selfTest("shuffle은 random 값에 따라 순서를 바꾼다", check => {
   check(result.join() === "2,3,4,1", `결과 ${result.join()}`);
 });
 
+
+selfTest("validateQuestions는 올바른 데이터에서 경고가 없다", check => {
+  const warnings = validateQuestions(makeQuestionSet());
+  check(warnings.length === 0, `경고 ${warnings.join(" / ")}`);
+});
+
+selfTest("validateQuestions는 카테고리 수와 문항 수를 잡는다", check => {
+  const data = makeQuestionSet();
+  delete data.science;
+  data.korean_history.items.pop();
+  const warnings = validateQuestions(data);
+  check(warnings.some(w => w.includes("카테고리가 4개가 아닙니다")), "카테고리 수 경고 없음");
+  check(warnings.some(w => w.includes("science")), "빠진 카테고리 경고 없음");
+  check(warnings.some(w => w.includes("문항이 10개가 아닙니다")), "문항 수 경고 없음");
+});
+
+selfTest("validateQuestions는 문항 필드를 잡는다", check => {
+  const data = makeQuestionSet();
+  const bad = data.korean_history.items[0];
+  bad.choices = ["하나", "둘"];
+  bad.answerIndex = 7;
+  bad.explanation = "";
+  bad.source = {};
+  const warnings = validateQuestions(data);
+  check(warnings.some(w => w.includes("보기가 4개가 아닙니다")), "보기 수 경고 없음");
+  check(warnings.some(w => w.includes("answerIndex")), "answerIndex 경고 없음");
+  check(warnings.some(w => w.includes("explanation")), "explanation 경고 없음");
+  check(warnings.some(w => w.includes("source.url")), "source.url 경고 없음");
+  check(warnings.every(w => w.includes("kh-01")), `문항 id가 없는 경고: ${warnings.join(" / ")}`);
+});
 // ===== 4. 상태 =====
 
 // ===== 5. 화면 조작 =====
