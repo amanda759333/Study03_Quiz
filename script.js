@@ -89,6 +89,37 @@ function reportDataWarnings(warnings) {
   for (const message of warnings) console.warn(`[quiz] 데이터 경고: ${message}`);
 }
 
+// 보기를 원래 색인과 함께 묶어 섞은 뒤, 정답이 어디로 갔는지 다시 찾는다.
+function toRoundItem(item, random = Math.random) {
+  const pairs = shuffle(item.choices.map((text, i) => ({ text: text, origin: i })), random);
+  return {
+    id: item.id,
+    question: item.question,
+    choices: pairs.map(pair => pair.text),
+    answerIndex: pairs.findIndex(pair => pair.origin === item.answerIndex),
+    explanation: item.explanation,
+    source: item.source
+  };
+}
+
+// 판마다 문항 순서와 보기 순서를 모두 섞는다 (PRD 4.2).
+function buildRound(data, categoryKey, random = Math.random) {
+  const category = data && data[categoryKey];
+  if (!category || !Array.isArray(category.items)) return [];
+  return shuffle(category.items, random).map(item => toRoundItem(item, random));
+}
+
+function scoreFor(correct, mode, usedHint) {
+  if (!correct) return 0;                       // 틀린 문항은 모든 모드에서 0점
+  if (mode === "hint" && usedHint) return 0.5;  // 힌트를 쓰고 맞히면 절반
+  return 1;
+}
+
+function formatScore(n) {
+  const rounded = Math.round(n * 10) / 10;
+  return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(1);
+}
+
 // ===== 3. 자체 점검 =====
 const SELF_TESTS = [];
 
@@ -188,6 +219,45 @@ selfTest("validateQuestions는 문항 필드를 잡는다", check => {
   check(warnings.some(w => w.includes("explanation")), "explanation 경고 없음");
   check(warnings.some(w => w.includes("source.url")), "source.url 경고 없음");
   check(warnings.every(w => w.includes("kh-01")), `문항 id가 없는 경고: ${warnings.join(" / ")}`);
+});
+
+selfTest("toRoundItem은 보기를 섞어도 정답을 잃지 않는다", check => {
+  const source = makeQuestion("science", 1);
+  for (let seed = 0; seed < 50; seed++) {
+    const item = toRoundItem(source, () => (seed % 7) / 7);
+    check(item.choices.length === 4, `보기 ${item.choices.length}개`);
+    check(item.choices[item.answerIndex] === source.choices[source.answerIndex],
+      `정답 위치 틀림: ${item.choices[item.answerIndex]}`);
+    check([...item.choices].sort().join("|") === [...source.choices].sort().join("|"),
+      "보기 내용이 바뀜");
+  }
+});
+
+selfTest("buildRound는 한 카테고리 전부를 담고 원본을 건드리지 않는다", check => {
+  const data = makeQuestionSet();
+  const before = data.science.items.map(item => item.id).join(",");
+  const round = buildRound(data, "science");
+  check(round.length === 10, `문항 ${round.length}개`);
+  check(data.science.items.map(item => item.id).join(",") === before, "원본 순서가 바뀜");
+  check([...round].map(item => item.id).sort().join(",") === before.split(",").sort().join(","),
+    "문항 구성이 다름");
+  check(buildRound(data, "없는카테고리").length === 0, "없는 카테고리에서 빈 배열이 아님");
+});
+
+selfTest("scoreFor는 모드와 힌트 사용에 따라 점수를 준다", check => {
+  check(scoreFor(true, "practice", false) === 1, "연습 정답 1점");
+  check(scoreFor(true, "speed", false) === 1, "스피드 정답 1점");
+  check(scoreFor(true, "hint", false) === 1, "힌트 미사용 정답 1점");
+  check(scoreFor(true, "hint", true) === 0.5, "힌트 사용 정답 0.5점");
+  check(scoreFor(false, "hint", true) === 0, "오답 0점");
+  check(scoreFor(false, "speed", false) === 0, "오답 0점");
+});
+
+selfTest("formatScore는 정수는 정수로, 소수는 한 자리로 쓴다", check => {
+  check(formatScore(0) === "0", `0 → ${formatScore(0)}`);
+  check(formatScore(7) === "7", `7 → ${formatScore(7)}`);
+  check(formatScore(6.5) === "6.5", `6.5 → ${formatScore(6.5)}`);
+  check(formatScore(6.499) === "6.5", `6.499 → ${formatScore(6.499)}`);
 });
 // ===== 4. 상태 =====
 
