@@ -120,6 +120,83 @@ function formatScore(n) {
   return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(1);
 }
 
+function createSession(mode, categoryKey, items, options = {}) {
+  return {
+    mode: mode,
+    categoryKey: categoryKey,
+    items: items.slice(),
+    index: 0,
+    score: 0,
+    results: [],
+    isReview: Boolean(options.isReview),
+    locked: false,     // 현재 문항을 이미 채점했는가
+    hintUsed: false    // 현재 문항에서 힌트를 썼는가
+  };
+}
+
+function currentItem(session) {
+  return session.items[session.index];
+}
+
+function isLastQuestion(session) {
+  return session.index >= session.items.length - 1;
+}
+
+// 선택은 확정이며 되돌릴 수 없다 (PRD 3.3). 두 번째 호출은 무시한다.
+function applyAnswer(session, choiceIndex) {
+  if (session.locked) return null;
+  session.locked = true;
+
+  const item = currentItem(session);
+  const correct = choiceIndex === item.answerIndex;
+  const gained = scoreFor(correct, session.mode, session.hintUsed);
+  session.score = Math.round((session.score + gained) * 10) / 10;
+  session.results.push({
+    id: item.id,
+    selectedIndex: choiceIndex,
+    correct: correct,
+    usedHint: session.hintUsed,
+    timedOut: false
+  });
+  return { correct: correct, gained: gained };
+}
+
+// 시간 만료는 0점이지만 정답과 해설은 그대로 보여 준다 (PRD 2.2).
+function applyTimeout(session) {
+  if (session.locked) return false;
+  session.locked = true;
+
+  const item = currentItem(session);
+  session.results.push({
+    id: item.id,
+    selectedIndex: null,
+    correct: false,
+    usedHint: session.hintUsed,
+    timedOut: true
+  });
+  return true;
+}
+
+function advance(session) {
+  if (isLastQuestion(session)) return false;
+  session.index += 1;
+  session.locked = false;
+  session.hintUsed = false;
+  return true;
+}
+
+function countCorrect(session) {
+  return session.results.filter(result => result.correct).length;
+}
+
+function countWrong(session) {
+  return session.results.filter(result => !result.correct).length;
+}
+
+function countHintUsed(session) {
+  return session.results.filter(result => result.usedHint).length;
+}
+
 // ===== 3. 자체 점검 =====
 const SELF_TESTS = [];
 
@@ -258,6 +335,73 @@ selfTest("formatScore는 정수는 정수로, 소수는 한 자리로 쓴다", c
   check(formatScore(7) === "7", `7 → ${formatScore(7)}`);
   check(formatScore(6.5) === "6.5", `6.5 → ${formatScore(6.5)}`);
   check(formatScore(6.499) === "6.5", `6.499 → ${formatScore(6.499)}`);
+});
+
+function makeTestSession(mode = "practice") {
+  return createSession(mode, "science", buildRound(makeQuestionSet(), "science", () => 0));
+}
+
+selfTest("applyAnswer는 정답과 오답의 점수를 더한다", check => {
+  const session = makeTestSession();
+  const result = applyAnswer(session, session.items[0].answerIndex);
+  check(result.correct === true, "정답 판정 실패");
+  check(session.score === 1, `점수 ${session.score}`);
+  check(session.results.length === 1, `기록 ${session.results.length}건`);
+  check(session.results[0].timedOut === false, "timedOut이 false가 아님");
+
+  advance(session);
+  const wrongIndex = (session.items[1].answerIndex + 1) % 4;
+  const second = applyAnswer(session, wrongIndex);
+  check(second.correct === false, "오답 판정 실패");
+  check(session.score === 1, `오답 뒤 점수 ${session.score}`);
+  check(session.results[1].selectedIndex === wrongIndex, "고른 보기가 기록되지 않음");
+});
+
+selfTest("applyAnswer는 한 문항을 두 번 채점하지 않는다", check => {
+  const session = makeTestSession();
+  applyAnswer(session, session.items[0].answerIndex);
+  const again = applyAnswer(session, session.items[0].answerIndex);
+  check(again === null, "두 번째 채점이 null이 아님");
+  check(session.score === 1, `점수 ${session.score}`);
+  check(session.results.length === 1, `기록 ${session.results.length}건`);
+});
+
+selfTest("applyTimeout은 오답으로 기록하고 중복되지 않는다", check => {
+  const session = makeTestSession("speed");
+  check(applyTimeout(session) === true, "시간 초과 처리 실패");
+  check(session.score === 0, `점수 ${session.score}`);
+  check(session.results[0].correct === false, "오답으로 기록되지 않음");
+  check(session.results[0].timedOut === true, "timedOut이 기록되지 않음");
+  check(session.results[0].selectedIndex === null, "selectedIndex가 null이 아님");
+  check(applyTimeout(session) === false, "두 번째 시간 초과가 먹힘");
+  check(applyAnswer(session, 0) === null, "시간 초과 뒤에 채점이 먹힘");
+  check(session.results.length === 1, `기록 ${session.results.length}건`);
+});
+
+selfTest("advance는 마지막 문항에서 멈추고 문항 상태를 되돌린다", check => {
+  const session = makeTestSession("hint");
+  session.hintUsed = true;
+  applyAnswer(session, 0);
+  check(advance(session) === true, "다음 문항으로 가지 못함");
+  check(session.index === 1, `위치 ${session.index}`);
+  check(session.locked === false, "locked가 초기화되지 않음");
+  check(session.hintUsed === false, "hintUsed가 초기화되지 않음");
+
+  session.index = session.items.length - 1;
+  check(isLastQuestion(session) === true, "마지막 문항 판정 실패");
+  check(advance(session) === false, "마지막에서 더 넘어감");
+});
+
+selfTest("집계 함수는 맞힌 수와 틀린 수와 힌트 수를 센다", check => {
+  const session = makeTestSession("hint");
+  session.results = [
+    { id: "a", selectedIndex: 0, correct: true, usedHint: false, timedOut: false },
+    { id: "b", selectedIndex: 1, correct: true, usedHint: true, timedOut: false },
+    { id: "c", selectedIndex: null, correct: false, usedHint: false, timedOut: true }
+  ];
+  check(countCorrect(session) === 2, `맞힌 수 ${countCorrect(session)}`);
+  check(countWrong(session) === 1, `틀린 수 ${countWrong(session)}`);
+  check(countHintUsed(session) === 1, `힌트 수 ${countHintUsed(session)}`);
 });
 // ===== 4. 상태 =====
 
