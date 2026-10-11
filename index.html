@@ -1,0 +1,89 @@
+<!doctype html>
+<!-- 작성일시: 2026-10-12 02:13 (KST) -->
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>상식 퀴즈</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1 class="app-title">상식 퀴즈</h1>
+  <p id="app-error" class="banner error hidden" role="alert"></p>
+  <p id="app-warning" class="banner warn hidden" role="alert"></p>
+
+  <main>
+    <section id="screen-mode" class="screen hidden" aria-labelledby="mode-heading">
+      <h2 id="mode-heading">모드 선택</h2>
+      <ul id="mode-list" class="pick-list"></ul>
+      <div class="screen-actions">
+        <button id="mode-to-leaderboard" class="hidden" type="button">순위표 보기</button>
+      </div>
+    </section>
+
+    <section id="screen-category" class="screen hidden" aria-labelledby="category-heading">
+      <h2 id="category-heading">카테고리 선택</h2>
+      <p id="category-mode-note" class="note"></p>
+      <ul id="category-list" class="pick-list"></ul>
+      <div class="screen-actions">
+        <button id="category-to-mode" class="hidden" type="button">모드 선택으로</button>
+      </div>
+    </section>
+
+    <section id="screen-quiz" class="screen hidden" aria-labelledby="quiz-question">
+      <div class="quiz-hud">
+        <span id="quiz-progress"></span>
+        <span id="quiz-score"></span>
+        <span id="quiz-context"></span>
+        <span id="quiz-timer" class="hidden" role="timer"></span>
+      </div>
+
+      <h2 id="quiz-question"></h2>
+      <ul id="quiz-choices" class="choices"></ul>
+      <button id="quiz-hint" class="hidden" type="button">힌트</button>
+
+      <div id="quiz-feedback" class="feedback hidden" role="status">
+        <p id="feedback-verdict" class="verdict"></p>
+        <p id="feedback-explanation"></p>
+        <p id="feedback-source" class="source"></p>
+        <button id="quiz-next" type="button">다음</button>
+      </div>
+    </section>
+
+    <section id="screen-result" class="screen hidden" aria-labelledby="result-heading">
+      <h2 id="result-heading">결과</h2>
+      <p id="result-score" class="result-score"></p>
+      <p id="result-breakdown"></p>
+      <p id="result-hint-count" class="hidden"></p>
+      <p id="result-note" class="note hidden"></p>
+
+      <div id="result-save" class="hidden">
+        <label for="result-name">이름(별명)</label>
+        <input id="result-name" type="text" maxlength="20" autocomplete="off">
+        <button id="result-save-btn" type="button">기록 저장</button>
+        <p id="result-save-msg" class="note hidden" role="status"></p>
+      </div>
+
+      <div class="screen-actions">
+        <button id="result-retry-wrong" class="hidden" type="button">틀린 문제 다시 풀기</button>
+        <button id="result-again" type="button">같은 카테고리 다시</button>
+        <button id="result-to-category" type="button">카테고리 선택</button>
+        <button id="result-to-mode" class="hidden" type="button">모드 선택</button>
+      </div>
+    </section>
+
+    <section id="screen-leaderboard" class="screen hidden" aria-labelledby="lb-heading">
+      <h2 id="lb-heading">순위표</h2>
+      <p id="lb-storage-warning" class="note hidden" role="alert"></p>
+      <div id="lb-tables"></div>
+      <div class="screen-actions">
+        <button id="lb-clear" type="button">기록 전체 지우기</button>
+        <button id="lb-back" type="button">모드 선택으로</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="questions.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

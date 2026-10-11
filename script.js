@@ -409,8 +409,233 @@ selfTest("실제 QUESTIONS가 검증을 통과한다", check => {
   check(warnings.length === 0, `경고 ${warnings.length}개: ${warnings.slice(0, 5).join(" / ")}`);
 });
 // ===== 4. 상태 =====
+let session = null;
+let currentMode = "practice";   // 2단계에서 모드 선택 화면이 바꾼다
 
 // ===== 5. 화면 조작 =====
+function byId(id) {
+  return document.getElementById(id);
+}
+
+function showScreen(id) {
+  for (const screenId of SCREENS) {
+    const el = byId(screenId);
+    if (el) el.classList.toggle("hidden", screenId !== id);
+  }
+  window.scrollTo(0, 0);
+}
+
+function showFatal(message) {
+  const box = byId("app-error");
+  box.textContent = message;
+  box.classList.remove("hidden");
+  for (const screenId of SCREENS) {
+    const el = byId(screenId);
+    if (el) el.classList.add("hidden");
+  }
+}
+
+function showDataWarning(count) {
+  const box = byId("app-warning");
+  if (count === 0) {
+    box.classList.add("hidden");
+    return;
+  }
+  box.textContent = `문항 데이터에 문제가 ${count}건 있습니다. 개발자 도구 콘솔을 확인해 주세요.`;
+  box.classList.remove("hidden");
+}
+
+function categoryLabel(categoryKey) {
+  const category = QUESTIONS[categoryKey];
+  return category && category.label ? category.label : categoryKey;
+}
+
+function renderCategoryScreen() {
+  byId("category-mode-note").textContent = `모드: ${MODE_LABELS[currentMode]}`;
+
+  const list = byId("category-list");
+  list.textContent = "";
+
+  for (const key of CATEGORY_ORDER) {
+    const category = QUESTIONS[key];
+    if (!category || !Array.isArray(category.items)) continue;
+
+    const li = document.createElement("li");
+    const button = document.createElement("button");
+    button.type = "button";
+    button.dataset.category = key;
+    button.textContent = category.label;
+
+    const sub = document.createElement("span");
+    sub.className = "pick-sub";
+    // 하드코딩한 10이 아니라 실제 문항 수를 쓴다 (리뷰 중점 2).
+    sub.textContent = `문항 ${category.items.length}개`;
+    button.appendChild(sub);
+
+    button.addEventListener("click", () => startRound(currentMode, key));
+    li.appendChild(button);
+    list.appendChild(li);
+  }
+}
+
+function startRound(mode, categoryKey, options = {}) {
+  currentMode = mode;
+  const items = options.items ? options.items : buildRound(QUESTIONS, categoryKey);
+  if (items.length === 0) {
+    showFatal("이 카테고리의 문항을 불러올 수 없습니다. questions.js를 확인해 주세요.");
+    return;
+  }
+  session = createSession(mode, categoryKey, items, { isReview: Boolean(options.isReview) });
+  renderQuestion();
+  showScreen("screen-quiz");
+}
+
+function updateHud() {
+  byId("quiz-progress").textContent = `${session.index + 1} / ${session.items.length}`;
+  byId("quiz-score").textContent =
+    session.isReview ? "복습 중" : `점수 ${formatScore(session.score)}`;
+  byId("quiz-context").textContent =
+    `${MODE_LABELS[session.mode]} · ${categoryLabel(session.categoryKey)}`;
+}
+
+function renderQuestion() {
+  const item = currentItem(session);
+  updateHud();
+  byId("quiz-question").textContent = item.question;
+
+  const list = byId("quiz-choices");
+  list.textContent = "";
+  item.choices.forEach((text, i) => {
+    const li = document.createElement("li");
+    const button = document.createElement("button");
+    button.type = "button";
+    button.dataset.index = String(i);
+    button.textContent = text;
+    button.addEventListener("click", () => onChoiceClick(i));
+    li.appendChild(button);
+    list.appendChild(li);
+  });
+
+  byId("quiz-feedback").classList.add("hidden");
+}
+
+function onChoiceClick(choiceIndex) {
+  const outcome = applyAnswer(session, choiceIndex);
+  if (outcome === null) return;   // 이미 채점한 문항 (리뷰 중점 3)
+  revealAnswer(choiceIndex);
+  renderFeedback(outcome.correct, false);
+  updateHud();
+}
+
+function revealAnswer(selectedIndex) {
+  const item = currentItem(session);
+  for (const button of byId("quiz-choices").querySelectorAll("button")) {
+    const i = Number(button.dataset.index);
+    button.disabled = true;
+    button.classList.remove("is-removed");   // 힌트로 감춘 보기도 정답 확인 때는 보여 준다
+    if (i === item.answerIndex) button.classList.add("is-correct");
+    else if (i === selectedIndex) button.classList.add("is-wrong");
+  }
+}
+
+function renderFeedback(correct, timedOut) {
+  const item = currentItem(session);
+
+  const verdict = byId("feedback-verdict");
+  verdict.classList.remove("ok", "no");
+  if (timedOut) {
+    verdict.textContent = "시간 초과 — 오답으로 처리했습니다";
+    verdict.classList.add("no");
+  } else if (correct) {
+    verdict.textContent = "정답입니다";
+    verdict.classList.add("ok");
+  } else {
+    verdict.textContent = "오답입니다";
+    verdict.classList.add("no");
+  }
+
+  byId("feedback-explanation").textContent = item.explanation;
+
+  const sourceBox = byId("feedback-source");
+  sourceBox.textContent = "출처: ";
+  const link = document.createElement("a");
+  link.href = item.source.url;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.textContent = item.source.title || item.source.url;
+  sourceBox.appendChild(link);
+  if (item.source.checkedAt) {
+    sourceBox.appendChild(document.createTextNode(` (확인: ${item.source.checkedAt})`));
+  }
+
+  byId("quiz-next").textContent = isLastQuestion(session) ? "결과 보기" : "다음";
+  byId("quiz-feedback").classList.remove("hidden");
+}
+
+function onNextClick() {
+  if (advance(session)) {
+    renderQuestion();
+    return;
+  }
+  renderResult();
+  showScreen("screen-result");
+}
+
+function renderResult() {
+  const total = session.items.length;   // 하드코딩한 10을 쓰지 않는다 (리뷰 중점 2)
+  const correct = countCorrect(session);
+  const scoreBox = byId("result-score");
+  const note = byId("result-note");
+
+  if (session.isReview) {
+    // 복습은 점수를 매기지 않고 맞힌 수만 알려 준다 (PRD 2.2).
+    scoreBox.textContent = `맞힌 문항 ${correct} / ${total}`;
+    note.textContent = "복습 — 점수에 반영되지 않음";
+    note.classList.remove("hidden");
+  } else {
+    scoreBox.textContent = `${formatScore(session.score)} / ${total}`;
+    if (session.mode === "practice") {
+      note.textContent = "순위표에 기록되지 않음";
+      note.classList.remove("hidden");
+    } else {
+      note.textContent = "";
+      note.classList.add("hidden");
+    }
+  }
+
+  byId("result-breakdown").textContent =
+    `맞힌 문항 ${correct}개 · 틀린 문항 ${countWrong(session)}개`;
+
+  const hintBox = byId("result-hint-count");
+  if (session.mode === "hint") {
+    hintBox.textContent = `힌트를 쓴 문항 ${countHintUsed(session)}개`;
+    hintBox.classList.remove("hidden");
+  } else {
+    hintBox.classList.add("hidden");
+  }
+}
+
+function init() {
+  if (typeof QUESTIONS === "undefined" || !QUESTIONS) {
+    showFatal("문항 데이터를 불러오지 못했습니다. questions.js가 같은 폴더에 있는지 확인해 주세요.");
+    return;
+  }
+
+  const warnings = validateQuestions(QUESTIONS);
+  reportDataWarnings(warnings);
+  showDataWarning(warnings.length);
+
+  byId("quiz-next").addEventListener("click", onNextClick);
+  byId("result-again").addEventListener("click", () => startRound(session.mode, session.categoryKey));
+  byId("result-to-category").addEventListener("click", () => {
+    renderCategoryScreen();
+    showScreen("screen-category");
+  });
+
+  renderCategoryScreen();
+  showScreen("screen-category");
+}
 
 // ===== 6. 시작 =====
 if (typeof location !== "undefined" && /[?&]test\b/.test(location.search)) runSelfTests();
+if (typeof document !== "undefined") init();
