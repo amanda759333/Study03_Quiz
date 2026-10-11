@@ -403,6 +403,11 @@ selfTest("집계 함수는 맞힌 수와 틀린 수와 힌트 수를 센다", ch
   check(countWrong(session) === 1, `틀린 수 ${countWrong(session)}`);
   check(countHintUsed(session) === 1, `힌트 수 ${countHintUsed(session)}`);
 });
+
+selfTest("실제 QUESTIONS가 검증을 통과한다", check => {
+  const warnings = validateQuestions(QUESTIONS);
+  check(warnings.length === 0, `경고 ${warnings.length}개: ${warnings.slice(0, 5).join(" / ")}`);
+});
 // ===== 4. 상태 =====
 
 // ===== 5. 화면 조작 =====
