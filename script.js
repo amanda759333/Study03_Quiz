@@ -44,6 +44,7 @@ const MODE_INFO = [
   }
 ];
 const QUESTIONS_PER_ROUND = 10;
+const SPEED_LIMIT_SEC = 15;
 
 // ===== 2. 순수 로직 =====
 
@@ -571,6 +572,7 @@ function renderModeScreen() {
 }
 
 function goToModeScreen() {
+  stopTimer();
   renderModeScreen();
   showScreen("screen-mode");
 }
@@ -607,6 +609,7 @@ function renderCategoryScreen() {
 }
 
 function startRound(mode, categoryKey, options = {}) {
+  stopTimer();
   currentMode = mode;
   const items = options.items ? options.items : buildRound(QUESTIONS, categoryKey);
   if (items.length === 0) {
@@ -645,11 +648,62 @@ function renderQuestion() {
   });
 
   byId("quiz-feedback").classList.add("hidden");
+  startTimer();
+}
+
+let timerId = null;
+let remainingSec = 0;
+
+function renderTimer() {
+  const box = byId("quiz-timer");
+  if (!session || session.mode !== "speed") {
+    box.classList.add("hidden");
+    box.classList.remove("is-urgent");
+    box.textContent = "";
+    return;
+  }
+  box.classList.remove("hidden");
+  box.classList.toggle("is-urgent", remainingSec <= 5);
+  box.textContent = `남은 시간 ${remainingSec}초`;
+}
+
+// 리뷰 중점 4 — 어디서 불러도 안전해야 한다. 남은 타이머가 없으면 아무 일도 하지 않는다.
+function stopTimer() {
+  if (timerId !== null) {
+    clearInterval(timerId);
+    timerId = null;
+  }
+}
+
+function startTimer() {
+  stopTimer();
+  if (!session || session.mode !== "speed") {
+    renderTimer();
+    return;
+  }
+  remainingSec = SPEED_LIMIT_SEC;
+  renderTimer();
+  timerId = setInterval(() => {
+    remainingSec -= 1;
+    renderTimer();
+    if (remainingSec <= 0) {
+      stopTimer();
+      onTimeout();
+    }
+  }, 1000);
+}
+
+function onTimeout() {
+  if (!applyTimeout(session)) return;   // 이미 채점한 문항 (리뷰 중점 3)
+  revealAnswer(null);
+  renderFeedback(false, true);          // 만료도 정답과 해설을 보여 준다 (PRD 2.2)
+  updateHud();
 }
 
 function onChoiceClick(choiceIndex) {
   const outcome = applyAnswer(session, choiceIndex);
   if (outcome === null) return;   // 이미 채점한 문항 (리뷰 중점 3)
+  stopTimer();                    // 해설을 읽는 시간은 제한하지 않는다
   revealAnswer(choiceIndex);
   renderFeedback(outcome.correct, false);
   updateHud();
@@ -705,6 +759,7 @@ function onNextClick() {
     renderQuestion();
     return;
   }
+  stopTimer();
   renderResult();
   showScreen("screen-result");
 }
@@ -792,10 +847,7 @@ function init() {
 
   byId("quiz-next").addEventListener("click", onNextClick);
   byId("result-again").addEventListener("click", () => startRound(session.mode, session.categoryKey));
-  byId("result-to-category").addEventListener("click", () => {
-    renderCategoryScreen();
-    showScreen("screen-category");
-  });
+  byId("result-to-category").addEventListener("click", goToModeScreen);
 
   byId("category-to-mode").addEventListener("click", goToModeScreen);
 
