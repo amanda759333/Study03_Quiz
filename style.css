@@ -20,6 +20,13 @@ body {
   line-height: 1.6;
 }
 
+.student {
+  max-width: 720px;
+  margin: 0 auto 4px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
 .app-title { font-size: 1.25rem; margin: 0 0 16px; }
 
 main { max-width: 720px; margin: 0 auto; }
