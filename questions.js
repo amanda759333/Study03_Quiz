@@ -1,5 +1,5 @@
 // 작성일시: 2026-10-12 01:53 (KST)
-// 상식 퀴즈 문항. 스키마는 PRD.md 4.2, 작성 절차는 IMPL-PLAN.md "문항 작성 절차"를 따른다.
+// 상식 퀴즈 문항. 작성 규칙은 CLAUDE.md, 스키마는 PRD.md 4.2, 절차는 IMPL-PLAN.md "문항 작성 절차"를 따른다.
 
 const QUESTIONS = {
   korean_history: {
@@ -144,8 +144,8 @@ const QUESTIONS = {
       },
       {
         id: "wg-02",
-        question: "외교부 국가정보에 적힌 브라질연방공화국의 언어는?",
-        choices: ["에스파냐어", "포르투갈어", "프랑스어", "영어"],
+        question: "외교부 국가정보가 브라질연방공화국의 언어로 적은 것은?",
+        choices: ["에스파냐어", "포르투갈어", "프랑스어", "네덜란드어"],
         answerIndex: 1,
         explanation: "남아메리카에서 브라질만 포르투갈어를 쓴다.",
         source: {
@@ -159,7 +159,7 @@ const QUESTIONS = {
         question: "외교부 국가정보에 적힌 이집트아랍공화국의 수도는?",
         choices: ["알렉산드리아", "카이로", "룩소르", "아스완"],
         answerIndex: 1,
-        explanation: "수도는 카이로이고, 국토의 95%가 사막이라고 적혀 있다.",
+        explanation: "수도는 카이로이고, 알렉산드리아는 지중해 연안의 항구 도시다.",
         source: {
           title: "외교부 국가정보 — 이집트아랍공화국",
           url: "https://www.mofa.go.kr/www/nation/m_3458/view.do?seq=168",
@@ -168,10 +168,10 @@ const QUESTIONS = {
       },
       {
         id: "wg-04",
-        question: "안데스산맥과 아마존 분지가 만나는 곳에 있는 잉카 유적 마추픽추는 어느 나라에 있는가?",
+        question: "안데스산맥과 아마존 분지가 만나는 곳에 자리한 잉카 유적 마추픽추가 있는 나라는?",
         choices: ["페루", "볼리비아", "칠레", "멕시코"],
         answerIndex: 0,
-        explanation: "해발 2,430m 페루 안데스 동쪽 사면에 있는 세계유산이다.",
+        explanation: "페루 안데스 동쪽 사면에 있는 잉카 유적으로, 유네스코 세계유산이다.",
         source: {
           title: "UNESCO 세계유산 — Historic Sanctuary of Machu Picchu",
           url: "https://whc.unesco.org/en/list/274",
@@ -180,7 +180,7 @@ const QUESTIONS = {
       },
       {
         id: "wg-05",
-        question: "시베리아 남동부에 있으며, 얼지 않은 지구 담수의 약 20%를 담고 있다는 호수는?",
+        question: "시베리아 남동부에 있으며, 얼지 않은 지구 담수의 약 20%를 담고 있는 호수는?",
         choices: ["카스피해", "바이칼호", "아랄해", "발하슈호"],
         answerIndex: 1,
         explanation: "유네스코는 러시아 바이칼호가 얼지 않은 담수의 20%를 담고 있다고 적는다.",
@@ -195,7 +195,7 @@ const QUESTIONS = {
         question: "남아메리카 서쪽 태평양에 있는 화산섬 제도 갈라파고스를 영토로 둔 나라는?",
         choices: ["에콰도르", "페루", "콜롬비아", "코스타리카"],
         answerIndex: 0,
-        explanation: "유네스코·브리태니커 모두 본토에서 약 1,000km 떨어졌다고 적는다.",
+        explanation: "남아메리카 본토에서 멀리 떨어진 화산섬 제도로, 에콰도르 영토다.",
         source: {
           title: "UNESCO 세계유산 — Galápagos Islands",
           url: "https://whc.unesco.org/en/list/1",
@@ -207,7 +207,7 @@ const QUESTIONS = {
         question: "빅토리아 폭포(모시 오아 툰야)를 이루며 떨어지는 강은?",
         choices: ["나일강", "콩고강", "잠베지강", "니제르강"],
         answerIndex: 2,
-        explanation: "폭포 지점에서 폭 2km가 넘는 잠베지강이 현무암 협곡으로 떨어진다.",
+        explanation: "잠베지강이 현무암 협곡으로 떨어지면서 폭포를 이룬다.",
         source: {
           title: "UNESCO 세계유산 — Mosi-oa-Tunya / Victoria Falls",
           url: "https://whc.unesco.org/en/list/509",
@@ -229,9 +229,9 @@ const QUESTIONS = {
       {
         id: "wg-09",
         question: "유네스코 세계유산으로 등재된 산호초 지대 그레이트배리어리프가 펼쳐진 나라는?",
-        choices: ["인도네시아", "필리핀", "오스트레일리아", "멕시코"],
+        choices: ["인도네시아", "파푸아뉴기니", "오스트레일리아", "뉴칼레도니아"],
         answerIndex: 2,
-        explanation: "오스트레일리아 북동 해안을 따라 이어진 산호초 지대다. 산호 종 수는 출처마다 다르다.",
+        explanation: "오스트레일리아 북동 퀸즐랜드 해안을 따라 이어진 산호초 지대다.",
         source: {
           title: "UNESCO 세계유산 — Great Barrier Reef",
           url: "https://whc.unesco.org/en/list/154",
@@ -243,7 +243,7 @@ const QUESTIONS = {
         question: "미국 애리조나주의 그랜드캐니언을 깎아 낸 강은?",
         choices: ["미시시피강", "리오그란데강", "콜로라도강", "컬럼비아강"],
         answerIndex: 2,
-        explanation: "콜로라도강이 깎아 낸 깊이 약 1,500m의 협곡이다.",
+        explanation: "콜로라도강이 고원을 깎아 낸 협곡이며, 강은 협곡 바닥을 흐른다.",
         source: {
           title: "UNESCO 세계유산 — Grand Canyon National Park",
           url: "https://whc.unesco.org/en/list/75",
@@ -318,7 +318,7 @@ const QUESTIONS = {
       {
         id: "sc-06",
         question: "지구와 달 사이의 평균 거리는 약 얼마인가?",
-        choices: ["3만 8,440km", "38만 4,400km", "150만km", "1,496만km"],
+        choices: ["3만 8,440km", "38만 4,400km", "384만 4,000km", "3,844만km"],
         answerIndex: 1,
         explanation: "달 궤도의 반지름은 0.3844×10⁶km, 곧 약 38만 4,400km다.",
         source: {
@@ -330,7 +330,7 @@ const QUESTIONS = {
       {
         id: "sc-07",
         question: "국제 단위계가 정한 진공에서의 빛의 속도 값은?",
-        choices: ["299,792,458 m/s", "300,000,000 m/s", "29,979,245 m/s", "343 m/s"],
+        choices: ["299,792,458 m/s", "300,000,000 m/s", "29,979,245 m/s", "299,000,000 m/s"],
         answerIndex: 0,
         explanation: "오차 없이 정확한 값으로 정해진 상수이며 단위는 m/s다.",
         source: {
@@ -341,10 +341,10 @@ const QUESTIONS = {
       },
       {
         id: "sc-08",
-        question: "DNA를 이루는 네 염기는 아데닌, 시토신, 구아닌과 무엇인가?",
-        choices: ["우라실", "티민", "리보스", "인산"],
-        answerIndex: 1,
-        explanation: "DNA는 A·C·G·T 네 염기로 이루어진다. 우라실은 RNA에 쓰인다.",
+        question: "DNA의 네 염기 가운데 RNA에서는 우라실이 그 자리를 대신하는 것은?",
+        choices: ["아데닌", "구아닌", "시토신", "티민"],
+        answerIndex: 3,
+        explanation: "DNA는 A·C·G·T를 쓰고, RNA에서는 티민 자리에 우라실이 들어간다.",
         source: {
           title: "NHGRI — Deoxyribonucleic Acid (DNA)",
           url: "https://www.genome.gov/genetics-glossary/Deoxyribonucleic-Acid",
@@ -368,7 +368,7 @@ const QUESTIONS = {
         question: "NASA 자료에 적힌 태양의 유효 온도(표면 온도)는?",
         choices: ["1,000K", "5,772K", "15,000K", "1,500만K"],
         answerIndex: 1,
-        explanation: "표면의 유효 온도는 5,772K이고, 1,500만K는 중심부 온도다.",
+        explanation: "NASA 자료는 표면의 유효 온도를 5,772K로 적고, 중심부는 이보다 훨씬 뜨겁다.",
         source: {
           title: "NASA — Sun Fact Sheet",
           url: "https://nssdc.gsfc.nasa.gov/planetary/factsheet/sunfact.html",
@@ -407,7 +407,7 @@ const QUESTIONS = {
       {
         id: "ac-03",
         question: "우리나라 세계자연유산 가운데 2007년에 등재된 것은?",
-        choices: ["한국의 갯벌", "제주 화산섬과 용암동굴", "설악산 천연보호구역", "순천만"],
+        choices: ["한국의 갯벌", "제주 화산섬과 용암동굴", "설악산 천연보호구역", "다도해 해상 국립공원"],
         answerIndex: 1,
         explanation: "우리 자연유산은 제주 화산섬과 용암동굴(2007), 한국의 갯벌 둘이다.",
         source: {
@@ -479,7 +479,7 @@ const QUESTIONS = {
       {
         id: "ac-09",
         question: "빈센트 반 고흐가 1889년에 그린 '별이 빛나는 밤'을 소장한 곳은?",
-        choices: ["뉴욕 현대미술관(MoMA)", "오르세 미술관", "반 고흐 미술관", "구겐하임 미술관"],
+        choices: ["뉴욕 현대미술관", "오르세 미술관", "반 고흐 미술관", "구겐하임 미술관"],
         answerIndex: 0,
         explanation: "1889년 6월 생레미에서 그렸고 뉴욕 현대미술관이 소장한다.",
         source: {
@@ -491,7 +491,7 @@ const QUESTIONS = {
       {
         id: "ac-10",
         question: "네덜란드 마우리츠하위스 미술관에 있는 '진주 귀고리를 한 소녀'를 그린 화가는?",
-        choices: ["렘브란트", "프란스 할스", "얀 반 에이크", "요하네스 베르메르"],
+        choices: ["렘브란트 판 레인", "프란스 할스", "얀 반 에이크", "요하네스 베르메르"],
         answerIndex: 3,
         explanation: "헤이그 마우리츠하위스가 소장한 요하네스 베르메르의 그림이다.",
         source: {
