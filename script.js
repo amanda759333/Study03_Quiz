@@ -83,6 +83,12 @@ function validateQuestions(data) {
     if (category.items.length !== QUESTIONS_PER_ROUND) {
       warnings.push(`${key}: 문항이 ${QUESTIONS_PER_ROUND}개가 아닙니다 (${category.items.length}개)`);
     }
+    // 문항을 복사해 붙이고 id를 안 고치면 결과 목록과 복습 문항이 어긋난다. 조용히 넘기지 않는다.
+    const ids = category.items.map(item => item && item.id);
+    ids.forEach((id, i) => {
+      if (id && ids.indexOf(id) !== i) warnings.push(`${key}: 문항 id ${id}가 중복입니다`);
+    });
+
     category.items.forEach((item, i) => {
       const at = item && item.id ? item.id : `${key}[${i}]`;
       if (!item || typeof item !== "object") {
@@ -332,6 +338,13 @@ selfTest("validateQuestions는 올바른 데이터를 통과시키고 카테고�
   check(fieldWarnings.some(w => w.includes("explanation")), "explanation 경고 없음");
   check(fieldWarnings.some(w => w.includes("source.url")), "source.url 경고 없음");
   check(fieldWarnings.every(w => w.includes("kh-01")), `문항 id가 없는 경고: ${fieldWarnings.join(" / ")}`);
+
+  // 손으로 복사해 붙인 문항의 id를 안 고치면 결과 목록과 복습 문항이 조용히 어긋난다.
+  const duped = makeQuestionSet();
+  duped.science.items[1].id = duped.science.items[0].id;
+  const dupWarnings = validateQuestions(duped);
+  check(dupWarnings.some(w => w.includes("중복")), `id 중복 경고 없음: ${dupWarnings.join(" / ")}`);
+  check(dupWarnings.some(w => w.includes("sc-01")), "중복 경고에 문항 id가 없음");
 });
 
 selfTest("toRoundItem은 보기를 섞어도 정답을 잃지 않는다", check => {
@@ -495,6 +508,7 @@ selfTest("canRetryWrong은 연습 모드에서 틀린 문항이 있을 때만 �
   review.results = [{ id: "a", selectedIndex: 0, correct: false, usedHint: false, timedOut: false }];
   check(canRetryWrong(review) === true, "복습에서 또 틀렸는데 거짓");
 });
+
 // ===== 4. 상태 =====
 let session = null;
 let currentMode = "practice";   // 2단계에서 모드 선택 화면이 바꾼다

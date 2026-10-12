@@ -233,6 +233,7 @@ const QUESTIONS = {
 - 문항마다 보기가 4개인지
 - `answerIndex`가 0~3 범위인지
 - `explanation`과 `source.url`이 비어 있지 않은지
+- 문항 `id`가 카테고리 안에서 중복되지 않는지
 
 ## 5. script.js 구조
 
