@@ -32,9 +32,9 @@
 
     <section id="screen-quiz" class="screen hidden" aria-labelledby="quiz-question">
       <div class="quiz-hud">
+        <span id="quiz-context"></span>
         <span id="quiz-progress"></span>
         <span id="quiz-score"></span>
-        <span id="quiz-context"></span>
         <span id="quiz-timer" class="hidden" role="timer"></span>
       </div>
 
@@ -57,6 +57,8 @@
       <p id="result-hint-count" class="hidden"></p>
       <p id="result-note" class="note hidden"></p>
 
+      <ol id="result-items" class="result-items"></ol>
+
       <div id="result-save" class="hidden">
         <label for="result-name">이름(별명)</label>
         <input id="result-name" type="text" maxlength="20" autocomplete="off">
@@ -66,8 +68,8 @@
 
       <div class="screen-actions">
         <button id="result-retry-wrong" class="hidden" type="button">틀린 문제 다시 풀기</button>
-        <button id="result-again" type="button">같은 카테고리 다시</button>
-        <button id="result-to-category" type="button">카테고리 선택</button>
+        <button id="result-again" type="button">같은 모드 다시</button>
+        <button id="result-to-category" type="button">처음으로</button>
         <button id="result-to-mode" class="hidden" type="button">모드 선택</button>
       </div>
     </section>

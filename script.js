@@ -253,49 +253,44 @@ function makeQuestionSet(perCategory = QUESTIONS_PER_ROUND) {
   return data;
 }
 
-selfTest("shuffle은 같은 원소를 모두 담은 새 배열을 반환한다", check => {
+// 점검 항목은 1단계 12개다(수업 노트 기준). 섞기·문항 검사는 확인(check)을 그대로 두고
+// 점검 하나로 묶었다.
+selfTest("shuffle은 원소를 모두 담은 새 배열을 돌려주고 random 값에 따라 순서를 바꾼다", check => {
   const original = [1, 2, 3, 4, 5];
   const result = shuffle(original);
   check(result !== original, "새 배열이어야 함");
   check(result.length === 5, `길이 ${result.length}`);
   check([...result].sort().join() === "1,2,3,4,5", `원소 ${result.join()}`);
   check(original.join() === "1,2,3,4,5", "원본이 바뀜");
+
+  const fixed = shuffle([1, 2, 3, 4], () => 0);
+  check(fixed.join() === "2,3,4,1", `고정 난수 결과 ${fixed.join()}`);
 });
 
-selfTest("shuffle은 random 값에 따라 순서를 바꾼다", check => {
-  const result = shuffle([1, 2, 3, 4], () => 0);
-  check(result.join() === "2,3,4,1", `결과 ${result.join()}`);
-});
+selfTest("validateQuestions는 올바른 데이터를 통과시키고 카테고리·문항 수·문항 필드 문제를 잡는다", check => {
+  check(validateQuestions(makeQuestionSet()).length === 0,
+    `정상 데이터 경고 ${validateQuestions(makeQuestionSet()).join(" / ")}`);
 
+  const missing = makeQuestionSet();
+  delete missing.science;
+  missing.korean_history.items.pop();
+  const countWarnings = validateQuestions(missing);
+  check(countWarnings.some(w => w.includes("카테고리가 4개가 아닙니다")), "카테고리 수 경고 없음");
+  check(countWarnings.some(w => w.includes("science")), "빠진 카테고리 경고 없음");
+  check(countWarnings.some(w => w.includes("문항이 10개가 아닙니다")), "문항 수 경고 없음");
 
-selfTest("validateQuestions는 올바른 데이터에서 경고가 없다", check => {
-  const warnings = validateQuestions(makeQuestionSet());
-  check(warnings.length === 0, `경고 ${warnings.join(" / ")}`);
-});
-
-selfTest("validateQuestions는 카테고리 수와 문항 수를 잡는다", check => {
-  const data = makeQuestionSet();
-  delete data.science;
-  data.korean_history.items.pop();
-  const warnings = validateQuestions(data);
-  check(warnings.some(w => w.includes("카테고리가 4개가 아닙니다")), "카테고리 수 경고 없음");
-  check(warnings.some(w => w.includes("science")), "빠진 카테고리 경고 없음");
-  check(warnings.some(w => w.includes("문항이 10개가 아닙니다")), "문항 수 경고 없음");
-});
-
-selfTest("validateQuestions는 문항 필드를 잡는다", check => {
-  const data = makeQuestionSet();
-  const bad = data.korean_history.items[0];
+  const broken = makeQuestionSet();
+  const bad = broken.korean_history.items[0];
   bad.choices = ["하나", "둘"];
   bad.answerIndex = 7;
   bad.explanation = "";
   bad.source = {};
-  const warnings = validateQuestions(data);
-  check(warnings.some(w => w.includes("보기가 4개가 아닙니다")), "보기 수 경고 없음");
-  check(warnings.some(w => w.includes("answerIndex")), "answerIndex 경고 없음");
-  check(warnings.some(w => w.includes("explanation")), "explanation 경고 없음");
-  check(warnings.some(w => w.includes("source.url")), "source.url 경고 없음");
-  check(warnings.every(w => w.includes("kh-01")), `문항 id가 없는 경고: ${warnings.join(" / ")}`);
+  const fieldWarnings = validateQuestions(broken);
+  check(fieldWarnings.some(w => w.includes("보기가 4개가 아닙니다")), "보기 수 경고 없음");
+  check(fieldWarnings.some(w => w.includes("answerIndex")), "answerIndex 경고 없음");
+  check(fieldWarnings.some(w => w.includes("explanation")), "explanation 경고 없음");
+  check(fieldWarnings.some(w => w.includes("source.url")), "source.url 경고 없음");
+  check(fieldWarnings.every(w => w.includes("kh-01")), `문항 id가 없는 경고: ${fieldWarnings.join(" / ")}`);
 });
 
 selfTest("toRoundItem은 보기를 섞어도 정답을 잃지 않는다", check => {
@@ -451,7 +446,10 @@ function categoryLabel(categoryKey) {
 }
 
 function renderCategoryScreen() {
-  byId("category-mode-note").textContent = `모드: ${MODE_LABELS[currentMode]}`;
+  // 시작 화면에 모드를 적고, 연습 모드면 순위표 미기록을 함께 알린다 (PRD 2.2).
+  const modeNote = `${MODE_LABELS[currentMode]} 모드`;
+  byId("category-mode-note").textContent =
+    currentMode === "practice" ? `${modeNote} · 순위표에 기록되지 않음` : modeNote;
 
   const list = byId("category-list");
   list.textContent = "";
@@ -495,7 +493,7 @@ function updateHud() {
   byId("quiz-score").textContent =
     session.isReview ? "복습 중" : `점수 ${formatScore(session.score)}`;
   byId("quiz-context").textContent =
-    `${MODE_LABELS[session.mode]} · ${categoryLabel(session.categoryKey)}`;
+    `${categoryLabel(session.categoryKey)} · ${MODE_LABELS[session.mode]}`;
 }
 
 function renderQuestion() {
@@ -613,6 +611,43 @@ function renderResult() {
   } else {
     hintBox.classList.add("hidden");
   }
+
+  renderResultItems();
+}
+
+// 문항별로 정답·오답과 정답 보기를 함께 보여 준다. 사용자 입력은 textContent로만 넣는다.
+function renderResultItems() {
+  const list = byId("result-items");
+  list.textContent = "";
+
+  session.results.forEach((result, i) => {
+    const item = session.items.find(candidate => candidate.id === result.id) || session.items[i];
+    if (!item) return;
+
+    const li = document.createElement("li");
+    li.className = result.correct ? "ri-ok" : "ri-no";
+
+    const verdict = document.createElement("span");
+    verdict.className = "ri-verdict";
+    verdict.textContent = result.timedOut ? "시간 초과" : result.correct ? "정답" : "오답";
+    li.appendChild(verdict);
+
+    const question = document.createElement("span");
+    question.className = "ri-question";
+    question.textContent = `${i + 1}. ${item.question}`;
+    li.appendChild(question);
+
+    const answer = document.createElement("span");
+    answer.className = "ri-answer";
+    let text = `정답: ${item.choices[item.answerIndex]}`;
+    if (!result.correct && result.selectedIndex !== null) {
+      text += ` · 내 선택: ${item.choices[result.selectedIndex]}`;
+    }
+    answer.textContent = text;
+    li.appendChild(answer);
+
+    list.appendChild(li);
+  });
 }
 
 function init() {
