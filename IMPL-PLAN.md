@@ -145,15 +145,17 @@ PRD가 전제하지만 어느 태스크의 본 기능에도 드러나지 않는,
 - `questions.js`에 40문항(카테고리마다 10문항, 출처를 직접 열어 확인)
 - `index.html`의 화면 5개 골격과 `style.css`
 - 연습 모드 화면 흐름: 카테고리 선택 → 문제 풀이(즉시 채점·한 줄 해설·출처) → 결과
-- 결과 화면의 `순위표에 기록되지 않음` 표시, [같은 카테고리 다시], [카테고리 선택]
+- 결과 화면의 `순위표에 기록되지 않음` 표시, 문항별 정답·오답 목록, [같은 모드 다시],
+  [처음으로]
 
 **이 단계에 없는 것**: 모드 선택 화면, 스피드·힌트 모드, 틀린 문제 다시 풀기, 순위표.
-앱을 열면 카테고리 선택 화면으로 바로 들어가고 연습 모드로만 진행한다. 결과 화면에
-[모드 선택] 입구를 두지 않는다(2단계에서 추가).
+앱을 열면 카테고리 선택 화면으로 바로 들어가고 연습 모드로만 진행한다. 이 화면이
+1단계의 시작 화면이다. 결과 화면 버튼은 [같은 모드 다시]와 [처음으로] 둘뿐이고,
+[처음으로]는 1단계에서 카테고리 선택 화면으로 간다(2단계부터 모드 선택 화면).
 
 **완료 기준** (실행자가 스스로 점검한다)
 
-- [ ] 점검 명령이 `자체 점검 결과: 통과 15, 실패 0`으로 끝나고 종료 코드가 0이다.
+- [ ] 점검 명령이 `자체 점검 결과: 통과 12, 실패 0`으로 끝나고 종료 코드가 0이다.
 - [ ] 문항 검수 명령에서 `해설 80자 초과`가 없고, `최상급 확인`으로 찍힌 문항은 모두
       기준과 시점이 본문에 들어 있다.
 - [ ] 카테고리 4개가 각각 10문항이고, 40문항 모두 `source.url`을 직접 열어 확인했다.
@@ -163,26 +165,25 @@ PRD가 전제하지만 어느 태스크의 본 기능에도 드러나지 않는,
 
 - [ ] 1. `index.html`을 더블클릭해 연다. 주소창이 `file:///C:/Study03_Quiz/index.html`
       이고, F12 콘솔에 빨간 오류와 `[quiz] 데이터 경고`가 없다.
-- [ ] 2. 카테고리 선택 화면에 카테고리 4개(한국사, 세계지리, 과학, 예술과 문화)가
-      보이고, 각 항목에 `문항 10개`가 적혀 있다.
-- [ ] 3. 카테고리 하나를 고른다. 진행 표시가 `1 / 10`이고, 모드와 카테고리가 보인다.
-- [ ] 4. 보기를 하나 고른다. **같은 화면에** 정답 여부, 한 줄 해설, 출처가 즉시
-      나타난다. 화면이 바뀌거나 버튼을 더 누를 필요가 없다.
-- [ ] 5. 채점 후 보기 버튼 4개가 모두 비활성화되고, 정답 보기가 구분되어 보인다.
-      다시 고를 수 없다.
-- [ ] 6. 일부러 틀려 본다. 내가 고른 보기와 정답 보기가 **함께** 구분되어 보인다.
-- [ ] 7. 보기를 아주 빠르게 두 번 연속 누른다. 점수가 1만 오른다.
-- [ ] 8. [다음]으로 10문항을 끝낸다. 마지막 문항에서 버튼이 [결과 보기]로 바뀐다.
-- [ ] 9. 결과 화면에 점수(`7 / 10`), 맞힌 수, 틀린 수, `순위표에 기록되지 않음`이
-      보인다.
-- [ ] 10. [같은 카테고리 다시]로 한 판 더 시작한다. **문항 순서와 보기 순서가 앞 판과
-      다르다.**
-- [ ] 11. [카테고리 선택]으로 돌아가 다른 카테고리로 한 판 더 푼다. 해설과 출처가
-      문항에 맞게 바뀐다.
-- [ ] 12. 출처 링크 3~4개를 눌러 본다. 새 탭에서 열리고, 내용이 해설과 맞는다.
-- [ ] 13. 창 폭을 400px 정도로 줄인다. 글자가 잘리거나 가로 스크롤이 생기지 않는다.
-- [ ] 14. 주소 끝에 `?test`를 붙여 다시 열고 콘솔을 본다.
-      `자체 점검 결과: 통과 15, 실패 0`이 찍힌다.
+- [ ] 2. 시작 화면에 카테고리 버튼 4개(한국사, 세계지리, 과학, 예술과 문화)가 보이고,
+      각 항목에 `문항 10개`가 적혀 있다. 화면에
+      `연습 모드 · 순위표에 기록되지 않음`이 보인다.
+- [ ] 3. 한국사를 누른다. 상단에 `한국사 · 연습`, `1 / 10`, `점수 0`이 보인다.
+- [ ] 4. 정답을 고른다. 그 보기가 초록색이 되고, **같은 화면에** 한 줄 해설과 출처
+      링크가 즉시 나타난다. 화면이 바뀌거나 버튼을 더 누를 필요가 없다.
+- [ ] 5. 오답을 고른다. 고른 보기는 빨간색, 정답 보기는 초록색으로 표시된다.
+- [ ] 6. 답을 고른 뒤에 다른 보기를 눌러도 변화가 없다. 아주 빠르게 두 번 연속
+      눌러도 점수가 1만 오른다.
+- [ ] 7. 출처 링크를 누르면 새 탭에서 출처가 열리고, 내용이 해설과 맞는다.
+- [ ] 8. [다음]으로 10문항을 끝낸다. 10번째 문항에서 버튼이 [결과 보기]로 바뀐다.
+- [ ] 9. 결과 화면의 `9 / 10`이 맞힌 개수와 같고, 문항별 정답·오답 목록(문제, 정답
+      보기, 틀린 문항은 내 선택까지)과 `순위표에 기록되지 않음`이 보인다.
+- [ ] 10. [같은 모드 다시]를 누르면 **문항 순서와 보기 순서가 앞 판과 다르다.**
+- [ ] 11. [처음으로]를 누르면 시작 화면으로 돌아간다. 다른 카테고리로 한 판 더 풀면
+      해설과 출처가 문항에 맞게 바뀐다.
+- [ ] 12. 창 폭을 400px 정도로 줄인다. 글자가 잘리거나 가로 스크롤이 생기지 않는다.
+- [ ] 13. 주소 끝에 `?test`를 붙여 다시 열고 콘솔을 본다.
+      `자체 점검 결과: 통과 12, 실패 0`이 찍힌다(1단계 점검 항목 12개, 2단계 15개).
 
 ---
 
@@ -307,18 +308,18 @@ function makeQuestionSet(perCategory = QUESTIONS_PER_ROUND) {
   return data;
 }
 
-selfTest("shuffle은 같은 원소를 모두 담은 새 배열을 반환한다", check => {
+// 점검 항목은 1단계 12개다(수업 노트 기준). 섞기·문항 검사는 확인(check)을 그대로 두고
+// 점검 하나로 묶었다.
+selfTest("shuffle은 원소를 모두 담은 새 배열을 돌려주고 random 값에 따라 순서를 바꾼다", check => {
   const original = [1, 2, 3, 4, 5];
   const result = shuffle(original);
   check(result !== original, "새 배열이어야 함");
   check(result.length === 5, `길이 ${result.length}`);
   check([...result].sort().join() === "1,2,3,4,5", `원소 ${result.join()}`);
   check(original.join() === "1,2,3,4,5", "원본이 바뀜");
-});
 
-selfTest("shuffle은 random 값에 따라 순서를 바꾼다", check => {
-  const result = shuffle([1, 2, 3, 4], () => 0);
-  check(result.join() === "2,3,4,1", `결과 ${result.join()}`);
+  const fixed = shuffle([1, 2, 3, 4], () => 0);
+  check(fixed.join() === "2,3,4,1", `고정 난수 결과 ${fixed.join()}`);
 });
 
 // ===== 4. 상태 =====
@@ -335,8 +336,8 @@ Run:
 ```bash
 node -e "const fs=require('fs'),vm=require('vm');const c=vm.createContext({console,location:{search:'?test'}});for(const f of ['questions.js','script.js'])vm.runInContext(fs.readFileSync(f,'utf8'),c,{filename:f});process.exitCode=c.selfTestFailed?1:0"
 ```
-기대: `실패: shuffle은 …`이 두 번 나오고 둘 다 `예외: shuffle is not defined`.
-마지막 줄은 `자체 점검 결과: 통과 0, 실패 2`, 종료 코드 1.
+기대: `실패: shuffle은 …` 한 줄이 나오고 `예외: shuffle is not defined`가 찍힌다.
+마지막 줄은 `자체 점검 결과: 통과 0, 실패 1`, 종료 코드 1.
 
 - [ ] **4단계: `shuffle`을 구현한다** (`// ===== 2. 순수 로직 =====` 아래)
 
@@ -358,7 +359,7 @@ Run:
 ```bash
 node -e "const fs=require('fs'),vm=require('vm');const c=vm.createContext({console,location:{search:'?test'}});for(const f of ['questions.js','script.js'])vm.runInContext(fs.readFileSync(f,'utf8'),c,{filename:f});process.exitCode=c.selfTestFailed?1:0"
 ```
-기대: `자체 점검 결과: 통과 2, 실패 0`, 종료 코드 0.
+기대: `자체 점검 결과: 통과 1, 실패 0`, 종료 코드 0.
 
 - [ ] **6단계: 커밋**
 
@@ -383,34 +384,30 @@ cd /c/Study03_Quiz && git add questions.js script.js && git commit -m "feat: 자
 - [ ] **1단계: 실패하는 점검을 쓴다** (3. 자체 점검 구역의 마지막 `selfTest` 뒤에 추가)
 
 ```js
-selfTest("validateQuestions는 올바른 데이터에서 경고가 없다", check => {
-  const warnings = validateQuestions(makeQuestionSet());
-  check(warnings.length === 0, `경고 ${warnings.join(" / ")}`);
-});
+selfTest("validateQuestions는 올바른 데이터를 통과시키고 카테고리·문항 수·문항 필드 문제를 잡는다", check => {
+  check(validateQuestions(makeQuestionSet()).length === 0,
+    `정상 데이터 경고 ${validateQuestions(makeQuestionSet()).join(" / ")}`);
 
-selfTest("validateQuestions는 카테고리 수와 문항 수를 잡는다", check => {
-  const data = makeQuestionSet();
-  delete data.science;
-  data.korean_history.items.pop();
-  const warnings = validateQuestions(data);
-  check(warnings.some(w => w.includes("카테고리가 4개가 아닙니다")), "카테고리 수 경고 없음");
-  check(warnings.some(w => w.includes("science")), "빠진 카테고리 경고 없음");
-  check(warnings.some(w => w.includes("문항이 10개가 아닙니다")), "문항 수 경고 없음");
-});
+  const missing = makeQuestionSet();
+  delete missing.science;
+  missing.korean_history.items.pop();
+  const countWarnings = validateQuestions(missing);
+  check(countWarnings.some(w => w.includes("카테고리가 4개가 아닙니다")), "카테고리 수 경고 없음");
+  check(countWarnings.some(w => w.includes("science")), "빠진 카테고리 경고 없음");
+  check(countWarnings.some(w => w.includes("문항이 10개가 아닙니다")), "문항 수 경고 없음");
 
-selfTest("validateQuestions는 문항 필드를 잡는다", check => {
-  const data = makeQuestionSet();
-  const bad = data.korean_history.items[0];
+  const broken = makeQuestionSet();
+  const bad = broken.korean_history.items[0];
   bad.choices = ["하나", "둘"];
   bad.answerIndex = 7;
   bad.explanation = "";
   bad.source = {};
-  const warnings = validateQuestions(data);
-  check(warnings.some(w => w.includes("보기가 4개가 아닙니다")), "보기 수 경고 없음");
-  check(warnings.some(w => w.includes("answerIndex")), "answerIndex 경고 없음");
-  check(warnings.some(w => w.includes("explanation")), "explanation 경고 없음");
-  check(warnings.some(w => w.includes("source.url")), "source.url 경고 없음");
-  check(warnings.every(w => w.includes("kh-01")), `문항 id가 없는 경고: ${warnings.join(" / ")}`);
+  const fieldWarnings = validateQuestions(broken);
+  check(fieldWarnings.some(w => w.includes("보기가 4개가 아닙니다")), "보기 수 경고 없음");
+  check(fieldWarnings.some(w => w.includes("answerIndex")), "answerIndex 경고 없음");
+  check(fieldWarnings.some(w => w.includes("explanation")), "explanation 경고 없음");
+  check(fieldWarnings.some(w => w.includes("source.url")), "source.url 경고 없음");
+  check(fieldWarnings.every(w => w.includes("kh-01")), `문항 id가 없는 경고: ${fieldWarnings.join(" / ")}`);
 });
 ```
 
@@ -420,8 +417,8 @@ Run:
 ```bash
 node -e "const fs=require('fs'),vm=require('vm');const c=vm.createContext({console,location:{search:'?test'}});for(const f of ['questions.js','script.js'])vm.runInContext(fs.readFileSync(f,'utf8'),c,{filename:f});process.exitCode=c.selfTestFailed?1:0"
 ```
-기대: 새 점검 3개가 모두 `예외: validateQuestions is not defined`로 실패.
-`자체 점검 결과: 통과 2, 실패 3`, 종료 코드 1.
+기대: 새 점검 1개가 `예외: validateQuestions is not defined`로 실패.
+`자체 점검 결과: 통과 1, 실패 1`, 종료 코드 1.
 
 - [ ] **3단계: `validateQuestions`를 구현한다** (2. 순수 로직 구역 끝에 추가)
 
@@ -485,7 +482,7 @@ Run:
 ```bash
 node -e "const fs=require('fs'),vm=require('vm');const c=vm.createContext({console,location:{search:'?test'}});for(const f of ['questions.js','script.js'])vm.runInContext(fs.readFileSync(f,'utf8'),c,{filename:f});process.exitCode=c.selfTestFailed?1:0"
 ```
-기대: `자체 점검 결과: 통과 5, 실패 0`, 종료 코드 0.
+기대: `자체 점검 결과: 통과 2, 실패 0`, 종료 코드 0.
 
 - [ ] **5단계: 커밋**
 
@@ -562,7 +559,7 @@ Run:
 node -e "const fs=require('fs'),vm=require('vm');const c=vm.createContext({console,location:{search:'?test'}});for(const f of ['questions.js','script.js'])vm.runInContext(fs.readFileSync(f,'utf8'),c,{filename:f});process.exitCode=c.selfTestFailed?1:0"
 ```
 기대: 새 점검 4개가 `… is not defined`로 실패.
-`자체 점검 결과: 통과 5, 실패 4`, 종료 코드 1.
+`자체 점검 결과: 통과 2, 실패 4`, 종료 코드 1.
 
 - [ ] **3단계: 구현한다** (2. 순수 로직 구역 끝에 추가)
 
@@ -605,7 +602,7 @@ Run:
 ```bash
 node -e "const fs=require('fs'),vm=require('vm');const c=vm.createContext({console,location:{search:'?test'}});for(const f of ['questions.js','script.js'])vm.runInContext(fs.readFileSync(f,'utf8'),c,{filename:f});process.exitCode=c.selfTestFailed?1:0"
 ```
-기대: `자체 점검 결과: 통과 9, 실패 0`, 종료 코드 0.
+기대: `자체 점검 결과: 통과 6, 실패 0`, 종료 코드 0.
 
 - [ ] **5단계: 커밋**
 
@@ -714,7 +711,7 @@ Run:
 node -e "const fs=require('fs'),vm=require('vm');const c=vm.createContext({console,location:{search:'?test'}});for(const f of ['questions.js','script.js'])vm.runInContext(fs.readFileSync(f,'utf8'),c,{filename:f});process.exitCode=c.selfTestFailed?1:0"
 ```
 기대: 새 점검 5개가 `createSession is not defined` 등으로 실패.
-`자체 점검 결과: 통과 9, 실패 5`, 종료 코드 1.
+`자체 점검 결과: 통과 6, 실패 5`, 종료 코드 1.
 
 - [ ] **3단계: 구현한다** (2. 순수 로직 구역 끝에 추가)
 
@@ -803,7 +800,7 @@ Run:
 ```bash
 node -e "const fs=require('fs'),vm=require('vm');const c=vm.createContext({console,location:{search:'?test'}});for(const f of ['questions.js','script.js'])vm.runInContext(fs.readFileSync(f,'utf8'),c,{filename:f});process.exitCode=c.selfTestFailed?1:0"
 ```
-기대: `자체 점검 결과: 통과 14, 실패 0`, 종료 코드 0.
+기대: `자체 점검 결과: 통과 11, 실패 0`, 종료 코드 0.
 
 - [ ] **5단계: 커밋**
 
@@ -842,7 +839,7 @@ Run:
 node -e "const fs=require('fs'),vm=require('vm');const c=vm.createContext({console,location:{search:'?test'}});for(const f of ['questions.js','script.js'])vm.runInContext(fs.readFileSync(f,'utf8'),c,{filename:f});process.exitCode=c.selfTestFailed?1:0"
 ```
 기대: `실패: 실제 QUESTIONS가 검증을 통과한다`와 함께 카테고리 4개가 모두 문항 0개라는
-경고. `자체 점검 결과: 통과 14, 실패 1`, 종료 코드 1.
+경고. `자체 점검 결과: 통과 11, 실패 1`, 종료 코드 1.
 
 - [ ] **3단계: 한국사 10문항을 쓴다**
 
@@ -889,7 +886,7 @@ Run:
 ```bash
 node -e "const fs=require('fs'),vm=require('vm');const c=vm.createContext({console,location:{search:'?test'}});for(const f of ['questions.js','script.js'])vm.runInContext(fs.readFileSync(f,'utf8'),c,{filename:f});process.exitCode=c.selfTestFailed?1:0"
 ```
-기대: `통과 14, 실패 1`. 경고에 `korean_history`는 더 이상 나오지 않고, 남은 세
+기대: `통과 11, 실패 1`. 경고에 `korean_history`는 더 이상 나오지 않고, 남은 세
 카테고리만 `문항이 10개가 아닙니다 (0개)`로 남는다.
 
 - [ ] **6단계: 커밋** (점검이 실패한 상태로 커밋한다)
@@ -949,7 +946,7 @@ Run:
 ```bash
 node -e "const fs=require('fs'),vm=require('vm');const c=vm.createContext({console,location:{search:'?test'}});for(const f of ['questions.js','script.js'])vm.runInContext(fs.readFileSync(f,'utf8'),c,{filename:f});process.exitCode=c.selfTestFailed?1:0"
 ```
-기대: `통과 14, 실패 1`. 경고에 `science`와 `arts_culture`만 남는다.
+기대: `통과 11, 실패 1`. 경고에 `science`와 `arts_culture`만 남는다.
 
 - [ ] **4단계: 커밋**
 
@@ -1011,7 +1008,7 @@ Run:
 ```bash
 node -e "const fs=require('fs'),vm=require('vm');const c=vm.createContext({console,location:{search:'?test'}});for(const f of ['questions.js','script.js'])vm.runInContext(fs.readFileSync(f,'utf8'),c,{filename:f});process.exitCode=c.selfTestFailed?1:0"
 ```
-기대: `통과 14, 실패 1`. 경고에 `arts_culture`만 남는다.
+기대: `통과 11, 실패 1`. 경고에 `arts_culture`만 남는다.
 
 - [ ] **4단계: 커밋**
 
@@ -1067,7 +1064,7 @@ Run:
 ```bash
 node -e "const fs=require('fs'),vm=require('vm');const c=vm.createContext({console,location:{search:'?test'}});for(const f of ['questions.js','script.js'])vm.runInContext(fs.readFileSync(f,'utf8'),c,{filename:f});process.exitCode=c.selfTestFailed?1:0"
 ```
-기대: `자체 점검 결과: 통과 15, 실패 0`, 종료 코드 0.
+기대: `자체 점검 결과: 통과 12, 실패 0`, 종료 코드 0.
 
 - [ ] **4단계: 출처 40개를 훑는다**
 
@@ -1113,7 +1110,8 @@ cd /c/Study03_Quiz && git add questions.js && git commit -m "content: 예술과 
     `quiz-context`, `quiz-timer`, `quiz-question`, `quiz-choices`, `quiz-hint`,
     `quiz-feedback`, `feedback-verdict`, `feedback-explanation`, `feedback-source`,
     `quiz-next`, `result-score`, `result-breakdown`, `result-hint-count`,
-    `result-note`, `result-save`, `result-name`, `result-save-btn`, `result-save-msg`,
+    `result-note`, `result-items`, `result-save`, `result-name`, `result-save-btn`,
+    `result-save-msg`,
     `result-retry-wrong`, `result-again`, `result-to-category`, `result-to-mode`,
     `mode-list`, `mode-to-leaderboard`, `lb-tables`, `lb-storage-warning`, `lb-clear`,
     `lb-back`
@@ -1159,9 +1157,9 @@ cd /c/Study03_Quiz && git add questions.js && git commit -m "content: 예술과 
 
     <section id="screen-quiz" class="screen hidden" aria-labelledby="quiz-question">
       <div class="quiz-hud">
+        <span id="quiz-context"></span>
         <span id="quiz-progress"></span>
         <span id="quiz-score"></span>
-        <span id="quiz-context"></span>
         <span id="quiz-timer" class="hidden" role="timer"></span>
       </div>
 
@@ -1184,6 +1182,8 @@ cd /c/Study03_Quiz && git add questions.js && git commit -m "content: 예술과 
       <p id="result-hint-count" class="hidden"></p>
       <p id="result-note" class="note hidden"></p>
 
+      <ol id="result-items" class="result-items"></ol>
+
       <div id="result-save" class="hidden">
         <label for="result-name">이름(별명)</label>
         <input id="result-name" type="text" maxlength="20" autocomplete="off">
@@ -1193,8 +1193,8 @@ cd /c/Study03_Quiz && git add questions.js && git commit -m "content: 예술과 
 
       <div class="screen-actions">
         <button id="result-retry-wrong" class="hidden" type="button">틀린 문제 다시 풀기</button>
-        <button id="result-again" type="button">같은 카테고리 다시</button>
-        <button id="result-to-category" type="button">카테고리 선택</button>
+        <button id="result-again" type="button">같은 모드 다시</button>
+        <button id="result-to-category" type="button">처음으로</button>
         <button id="result-to-mode" class="hidden" type="button">모드 선택</button>
       </div>
     </section>
@@ -1347,10 +1347,28 @@ button:disabled { cursor: default; }
 .lb-table td.lb-score { font-variant-numeric: tabular-nums; font-weight: bold; }
 .lb-empty { color: var(--muted); margin: 0; }
 
+.result-items { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 8px; }
+.result-items li {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr;
+  gap: 2px 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-left-width: 4px;
+  border-radius: 6px;
+}
+.result-items li.ri-ok { border-left-color: var(--correct); }
+.result-items li.ri-no { border-left-color: var(--wrong); }
+.result-items .ri-verdict { grid-row: span 2; font-weight: bold; }
+.result-items li.ri-ok .ri-verdict { color: var(--correct); }
+.result-items li.ri-no .ri-verdict { color: var(--wrong); }
+.result-items .ri-answer { color: var(--muted); font-size: 0.9rem; }
+
 @media (max-width: 480px) {
   body { padding: 12px; }
   .screen { padding: 14px; }
   .lb-table th, .lb-table td { padding: 6px 4px; }
+  .result-items li { grid-template-columns: 1fr; }
 }
 ```
 
@@ -1404,7 +1422,10 @@ function categoryLabel(categoryKey) {
 }
 
 function renderCategoryScreen() {
-  byId("category-mode-note").textContent = `모드: ${MODE_LABELS[currentMode]}`;
+  // 시작 화면에 모드를 적고, 연습 모드면 순위표 미기록을 함께 알린다 (PRD 2.2).
+  const modeNote = `${MODE_LABELS[currentMode]} 모드`;
+  byId("category-mode-note").textContent =
+    currentMode === "practice" ? `${modeNote} · 순위표에 기록되지 않음` : modeNote;
 
   const list = byId("category-list");
   list.textContent = "";
@@ -1448,7 +1469,7 @@ function updateHud() {
   byId("quiz-score").textContent =
     session.isReview ? "복습 중" : `점수 ${formatScore(session.score)}`;
   byId("quiz-context").textContent =
-    `${MODE_LABELS[session.mode]} · ${categoryLabel(session.categoryKey)}`;
+    `${categoryLabel(session.categoryKey)} · ${MODE_LABELS[session.mode]}`;
 }
 
 function renderQuestion() {
@@ -1566,6 +1587,43 @@ function renderResult() {
   } else {
     hintBox.classList.add("hidden");
   }
+
+  renderResultItems();
+}
+
+// 문항별로 정답·오답과 정답 보기를 함께 보여 준다. 사용자 입력은 textContent로만 넣는다.
+function renderResultItems() {
+  const list = byId("result-items");
+  list.textContent = "";
+
+  session.results.forEach((result, i) => {
+    const item = session.items.find(candidate => candidate.id === result.id) || session.items[i];
+    if (!item) return;
+
+    const li = document.createElement("li");
+    li.className = result.correct ? "ri-ok" : "ri-no";
+
+    const verdict = document.createElement("span");
+    verdict.className = "ri-verdict";
+    verdict.textContent = result.timedOut ? "시간 초과" : result.correct ? "정답" : "오답";
+    li.appendChild(verdict);
+
+    const question = document.createElement("span");
+    question.className = "ri-question";
+    question.textContent = `${i + 1}. ${item.question}`;
+    li.appendChild(question);
+
+    const answer = document.createElement("span");
+    answer.className = "ri-answer";
+    let text = `정답: ${item.choices[item.answerIndex]}`;
+    if (!result.correct && result.selectedIndex !== null) {
+      text += ` · 내 선택: ${item.choices[result.selectedIndex]}`;
+    }
+    answer.textContent = text;
+    li.appendChild(answer);
+
+    list.appendChild(li);
+  });
 }
 
 function init() {
@@ -1602,7 +1660,7 @@ Run:
 ```bash
 node -e "const fs=require('fs'),vm=require('vm');const c=vm.createContext({console,location:{search:'?test'}});for(const f of ['questions.js','script.js'])vm.runInContext(fs.readFileSync(f,'utf8'),c,{filename:f});process.exitCode=c.selfTestFailed?1:0"
 ```
-기대: `자체 점검 결과: 통과 15, 실패 0`, 종료 코드 0. Node에는 `document`가 없어
+기대: `자체 점검 결과: 통과 12, 실패 0`, 종료 코드 0. Node에는 `document`가 없어
 `init`은 실행되지 않는다.
 
 - [ ] **5단계: 데이터 경고 표시를 확인한다**
@@ -1642,11 +1700,18 @@ cd /c/Study03_Quiz && git add index.html style.css script.js && git commit -m "f
   해설 중에는 타이머 정지, [다음]에서 15초 재시작
 - 힌트 모드: 문항마다 힌트 1번, 오답 2개를 무작위로 감춤, 힌트 쓰고 맞히면 0.5점
 - 연습 모드 결과 화면의 [틀린 문제 다시 풀기](재채점 없음, 저장 없음)
-- 카테고리·결과 화면의 [모드 선택] 입구
+- 카테고리 화면의 [모드 선택] 입구
+
+> **1단계 뒤 결정(2026-10-12, 수업 노트 기준):** 결과 화면 버튼은 [같은 모드 다시]와
+> [처음으로] 둘뿐이다. 2단계에서는 `result-to-category`([처음으로])가 모드 선택
+> 화면으로 가게 하고, `result-to-mode`([모드 선택]) 버튼은 쓰지 않는다. 아래 태스크
+> 11·12에 남아 있는 `result-to-mode` 단계는 그때 이 결정에 맞춰 고친다.
+> 힌트 모드 결과의 점수 표기(노트는 `맞힌 수 / 문항 수`, PRD 2.3은 `6.5 / 10`)는
+> 사용자에게 확인한 뒤 정한다.
 
 **완료 기준** (실행자가 스스로 점검한다)
 
-- [ ] 점검 명령이 `자체 점검 결과: 통과 18, 실패 0`으로 끝나고 종료 코드가 0이다.
+- [ ] 점검 명령이 `자체 점검 결과: 통과 15, 실패 0`으로 끝나고 종료 코드가 0이다.
 - [ ] `pickHintRemovals`가 어떤 난수에서도 정답을 지우지 않는다(점검에 포함).
 - [ ] 스피드 모드에서 `stopTimer`가 채점·결과 이동·판 시작·모드 이동에서 모두 불린다
       (코드를 눈으로 확인).
@@ -1754,7 +1819,7 @@ Run:
 node -e "const fs=require('fs'),vm=require('vm');const c=vm.createContext({console,location:{search:'?test'}});for(const f of ['questions.js','script.js'])vm.runInContext(fs.readFileSync(f,'utf8'),c,{filename:f});process.exitCode=c.selfTestFailed?1:0"
 ```
 기대: 새 점검 3개가 `pickHintRemovals is not defined` 등으로 실패.
-`자체 점검 결과: 통과 15, 실패 3`, 종료 코드 1.
+`자체 점검 결과: 통과 12, 실패 3`, 종료 코드 1.
 
 - [ ] **3단계: 구현한다** (2. 순수 로직 구역 끝에 추가)
 
@@ -1786,7 +1851,7 @@ Run:
 ```bash
 node -e "const fs=require('fs'),vm=require('vm');const c=vm.createContext({console,location:{search:'?test'}});for(const f of ['questions.js','script.js'])vm.runInContext(fs.readFileSync(f,'utf8'),c,{filename:f});process.exitCode=c.selfTestFailed?1:0"
 ```
-기대: `자체 점검 결과: 통과 18, 실패 0`, 종료 코드 0.
+기대: `자체 점검 결과: 통과 15, 실패 0`, 종료 코드 0.
 
 - [ ] **5단계: 커밋**
 
@@ -1907,7 +1972,7 @@ Run:
 ```bash
 node -e "const fs=require('fs'),vm=require('vm');const c=vm.createContext({console,location:{search:'?test'}});for(const f of ['questions.js','script.js'])vm.runInContext(fs.readFileSync(f,'utf8'),c,{filename:f});process.exitCode=c.selfTestFailed?1:0"
 ```
-기대: `자체 점검 결과: 통과 18, 실패 0`, 종료 코드 0.
+기대: `자체 점검 결과: 통과 15, 실패 0`, 종료 코드 0.
 
 - [ ] **6단계: 브라우저로 모드 선택을 확인한다**
 
@@ -2060,7 +2125,7 @@ Run:
 ```bash
 node -e "const fs=require('fs'),vm=require('vm');const c=vm.createContext({console,location:{search:'?test'}});for(const f of ['questions.js','script.js'])vm.runInContext(fs.readFileSync(f,'utf8'),c,{filename:f});process.exitCode=c.selfTestFailed?1:0"
 ```
-기대: `자체 점검 결과: 통과 18, 실패 0`, 종료 코드 0.
+기대: `자체 점검 결과: 통과 15, 실패 0`, 종료 코드 0.
 
 - [ ] **5단계: 타이머 누수를 브라우저에서 확인한다** (리뷰 중점 4)
 
@@ -2153,7 +2218,7 @@ Run:
 ```bash
 node -e "const fs=require('fs'),vm=require('vm');const c=vm.createContext({console,location:{search:'?test'}});for(const f of ['questions.js','script.js'])vm.runInContext(fs.readFileSync(f,'utf8'),c,{filename:f});process.exitCode=c.selfTestFailed?1:0"
 ```
-기대: `자체 점검 결과: 통과 18, 실패 0`, 종료 코드 0.
+기대: `자체 점검 결과: 통과 15, 실패 0`, 종료 코드 0.
 
 - [ ] **4단계: 브라우저에서 힌트를 확인한다**
 
@@ -2218,7 +2283,7 @@ Run:
 ```bash
 node -e "const fs=require('fs'),vm=require('vm');const c=vm.createContext({console,location:{search:'?test'}});for(const f of ['questions.js','script.js'])vm.runInContext(fs.readFileSync(f,'utf8'),c,{filename:f});process.exitCode=c.selfTestFailed?1:0"
 ```
-기대: `자체 점검 결과: 통과 18, 실패 0`, 종료 코드 0.
+기대: `자체 점검 결과: 통과 15, 실패 0`, 종료 코드 0.
 
 - [ ] **4단계: 2단계 "브라우저에서 직접 확인할 항목"을 실행자가 먼저 확인한다**
 
@@ -2253,7 +2318,7 @@ cd /c/Study03_Quiz && git add script.js && git commit -m "feat: 틀린 문제 �
 
 **완료 기준** (실행자가 스스로 점검한다)
 
-- [ ] 점검 명령이 `자체 점검 결과: 통과 23, 실패 0`으로 끝나고 종료 코드가 0이다.
+- [ ] 점검 명령이 `자체 점검 결과: 통과 20, 실패 0`으로 끝나고 종료 코드가 0이다.
 - [ ] `localStorage` 접근(읽기·쓰기·지우기) 세 곳이 모두 `try`/`catch` 안에 있다
       (코드를 눈으로 확인).
 - [ ] 연습 모드와 복습 결과에는 이름 입력칸이 나오지 않는다.
@@ -2381,7 +2446,7 @@ Run:
 node -e "const fs=require('fs'),vm=require('vm');const c=vm.createContext({console,location:{search:'?test'}});for(const f of ['questions.js','script.js'])vm.runInContext(fs.readFileSync(f,'utf8'),c,{filename:f});process.exitCode=c.selfTestFailed?1:0"
 ```
 기대: 새 점검 5개가 `normalizeName is not defined` 등으로 실패.
-`자체 점검 결과: 통과 18, 실패 5`, 종료 코드 1.
+`자체 점검 결과: 통과 15, 실패 5`, 종료 코드 1.
 
 - [ ] **3단계: 상수를 더한다** (1. 상수 구역의 `SPEED_LIMIT_SEC` 아래)
 
@@ -2467,7 +2532,7 @@ Run:
 ```bash
 node -e "const fs=require('fs'),vm=require('vm');const c=vm.createContext({console,location:{search:'?test'}});for(const f of ['questions.js','script.js'])vm.runInContext(fs.readFileSync(f,'utf8'),c,{filename:f});process.exitCode=c.selfTestFailed?1:0"
 ```
-기대: `자체 점검 결과: 통과 23, 실패 0`, 종료 코드 0.
+기대: `자체 점검 결과: 통과 20, 실패 0`, 종료 코드 0.
 
 - [ ] **6단계: 커밋**
 
@@ -2749,7 +2814,7 @@ Run:
 ```bash
 node -e "const fs=require('fs'),vm=require('vm');const c=vm.createContext({console,location:{search:'?test'}});for(const f of ['questions.js','script.js'])vm.runInContext(fs.readFileSync(f,'utf8'),c,{filename:f});process.exitCode=c.selfTestFailed?1:0"
 ```
-기대: `자체 점검 결과: 통과 23, 실패 0`, 종료 코드 0. Node에는 `localStorage`가 없지만
+기대: `자체 점검 결과: 통과 20, 실패 0`, 종료 코드 0. Node에는 `localStorage`가 없지만
 `probeStorage`는 `init` 안에서만 불리므로 실행되지 않는다.
 
 - [ ] **7단계: 저장이 막힌 상태를 브라우저에서 확인한다** (리뷰 중점 1)
@@ -2860,15 +2925,28 @@ PRD에 적혀 있지 않아 계획 단계에서 정한 것이다. 요구와 어�
 채점(태스크 4), 타이머 누수(태스크 12의 5단계), 이름 입력과 `textContent`(태스크 15,
 16).
 
-**5. 점검 코드 사전 실행:** 이 계획에 넣은 순수 로직과 점검 23개를 임시 폴더에서
+**5. 점검 코드 사전 실행:** 이 계획에 넣은 순수 로직과 점검 20개를 임시 폴더에서
 실제로 조립해 Node v24.19.0으로 돌려 보았다. 확인한 것은 다음과 같다.
 
-- 전체 통과: `자체 점검 결과: 통과 23, 실패 0`, 종료 코드 0.
-- 태스크별 누적 통과 수: 2 → 5 → 9 → 14 → 15 → 18 → 23 (계획에 적힌 숫자와 같다).
-- 태스크 1의 실패 상태: `shuffle`이 없을 때 점검 2개가
-  `예외: shuffle is not defined`로 실패하고 `통과 0, 실패 2`, 종료 코드 1.
+- 전체 통과: `자체 점검 결과: 통과 20, 실패 0`, 종료 코드 0.
+- 태스크별 누적 통과 수: 1 → 2 → 6 → 11 → 12 → 15 → 20 (계획에 적힌 숫자와 같다).
+- 태스크 1의 실패 상태: `shuffle`이 없을 때 점검 1개가
+  `예외: shuffle is not defined`로 실패하고 `통과 0, 실패 1`, 종료 코드 1.
 - 태스크 5~7의 실패 상태: 문항이 비어 있을 때 `실제 QUESTIONS가 검증을 통과한다`만
-  실패해 `통과 14, 실패 1`이 되고, 경고에 빈 카테고리 4개가 나열된다.
+  실패해 `통과 11, 실패 1`이 되고, 경고에 빈 카테고리 4개가 나열된다.
 - `questions.js`가 정의한 `const QUESTIONS`를 `script.js`가 같은 vm 전역에서 읽는 것
   (브라우저에서 스크립트 두 개를 차례로 불러오는 것과 같은 동작).
 - 문항 검수 명령이 우리 스키마(`QUESTIONS[카테고리].items`)에서 동작하는 것.
+
+## 1단계 수정 기록 (2026-10-12)
+
+1단계를 구현한 뒤 수업 노트의 확인 항목과 맞추며 고친 것이다. 노트가 기준이므로
+PRD.md 3.2·3.3·3.4·6.1·7.2와 이 계획서를 함께 고쳤다.
+
+- 시작 화면(카테고리 선택)에 `연습 모드 · 순위표에 기록되지 않음`을 적는다.
+- 문제 풀이 화면 상단을 `한국사 · 연습` → `1 / 10` → `점수 0` 순서로 둔다.
+- 결과 화면에 문항별 목록(문제, 정답·오답, 정답 보기, 틀린 문항은 내 선택)을 둔다.
+- 결과 화면 버튼 이름을 [같은 모드 다시], [처음으로]로 바꿨다.
+- 점검 항목을 1단계 12개로 맞췄다. 확인(`check`) 하나도 지우지 않고, 섞기 점검 2개를
+  하나로, `validateQuestions` 점검 3개를 하나로 묶었다. 누적 통과 수가
+  1 → 2 → 6 → 11 → 12 → 15 → 20으로 바뀌었다(2단계 15개, 3단계 20개).
