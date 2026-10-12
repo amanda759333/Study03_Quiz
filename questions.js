@@ -180,10 +180,10 @@ const QUESTIONS = {
       },
       {
         id: "wg-05",
-        question: "시베리아 남동부에 있으며 지구 담수의 20%를 담고 있다는 호수는?",
+        question: "시베리아 남동부에 있으며, 얼지 않은 지구 담수의 약 20%를 담고 있다는 호수는?",
         choices: ["카스피해", "바이칼호", "아랄해", "발하슈호"],
         answerIndex: 1,
-        explanation: "러시아 바이칼호는 깊이 1,700m로, 세계 담수의 20%를 담고 있다.",
+        explanation: "유네스코는 러시아 바이칼호가 얼지 않은 담수의 20%를 담고 있다고 적는다.",
         source: {
           title: "UNESCO 세계유산 — Lake Baikal",
           url: "https://whc.unesco.org/en/list/754",
@@ -192,10 +192,10 @@ const QUESTIONS = {
       },
       {
         id: "wg-06",
-        question: "남아메리카 해안에서 약 1,000km 떨어진 갈라파고스 제도를 영토로 둔 나라는?",
+        question: "남아메리카 서쪽 태평양에 있는 화산섬 제도 갈라파고스를 영토로 둔 나라는?",
         choices: ["에콰도르", "페루", "콜롬비아", "코스타리카"],
         answerIndex: 0,
-        explanation: "에콰도르 본토에서 약 1,000km 떨어진 화산섬 제도다.",
+        explanation: "유네스코·브리태니커 모두 본토에서 약 1,000km 떨어졌다고 적는다.",
         source: {
           title: "UNESCO 세계유산 — Galápagos Islands",
           url: "https://whc.unesco.org/en/list/1",
@@ -228,10 +228,10 @@ const QUESTIONS = {
       },
       {
         id: "wg-09",
-        question: "산호 400종이 사는 그레이트배리어리프가 펼쳐진 나라는?",
+        question: "유네스코 세계유산으로 등재된 산호초 지대 그레이트배리어리프가 펼쳐진 나라는?",
         choices: ["인도네시아", "필리핀", "오스트레일리아", "멕시코"],
         answerIndex: 2,
-        explanation: "오스트레일리아 북동 해안을 따라 이어진 산호초 지대다.",
+        explanation: "오스트레일리아 북동 해안을 따라 이어진 산호초 지대다. 산호 종 수는 출처마다 다르다.",
         source: {
           title: "UNESCO 세계유산 — Great Barrier Reef",
           url: "https://whc.unesco.org/en/list/154",
