@@ -94,7 +94,7 @@ button:disabled { cursor: default; }
 .choices button.is-wrong { border: 2px solid var(--wrong); color: var(--wrong); }
 .choices button.is-wrong::before { content: "내 선택 — "; }
 
-.choices button.is-removed { display: none; }
+.choices button.is-removed { opacity: 0.45; text-decoration: line-through; }
 
 .feedback { margin-top: 16px; padding: 14px 16px 0; border-top: 1px solid var(--line); }
 .verdict { font-weight: bold; margin: 0 0 8px; }

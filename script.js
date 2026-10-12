@@ -511,7 +511,8 @@ selfTest("canRetryWrong은 연습 모드에서 틀린 문항이 있을 때만 �
 
 // ===== 4. 상태 =====
 let session = null;
-let currentMode = "practice";   // 2단계에서 모드 선택 화면이 바꾼다
+let currentMode = "practice";            // 모드 선택 화면이 바꾼다
+let currentCategory = CATEGORY_ORDER[0]; // 시작 화면(카테고리)이 바꾼다
 
 // ===== 5. 화면 조작 =====
 function byId(id) {
@@ -552,6 +553,8 @@ function categoryLabel(categoryKey) {
 }
 
 function renderModeScreen() {
+  byId("mode-heading").textContent = `${categoryLabel(currentCategory)} · 모드를 고르세요`;
+
   const list = byId("mode-list");
   list.textContent = "";
 
@@ -574,11 +577,7 @@ function renderModeScreen() {
       button.appendChild(warn);
     }
 
-    button.addEventListener("click", () => {
-      currentMode = mode.key;
-      renderCategoryScreen();
-      showScreen("screen-category");
-    });
+    button.addEventListener("click", () => startRound(mode.key, currentCategory));
 
     li.appendChild(button);
     list.appendChild(li);
@@ -591,12 +590,13 @@ function goToModeScreen() {
   showScreen("screen-mode");
 }
 
-function renderCategoryScreen() {
-  // 시작 화면에 모드를 적고, 연습 모드면 순위표 미기록을 함께 알린다 (PRD 2.2).
-  const modeNote = `${MODE_LABELS[currentMode]} 모드`;
-  byId("category-mode-note").textContent =
-    currentMode === "practice" ? `${modeNote} · 순위표에 기록되지 않음` : modeNote;
+function goToCategoryScreen() {
+  stopTimer();
+  renderCategoryScreen();
+  showScreen("screen-category");
+}
 
+function renderCategoryScreen() {
   const list = byId("category-list");
   list.textContent = "";
 
@@ -616,7 +616,10 @@ function renderCategoryScreen() {
     sub.textContent = `문항 ${category.items.length}개`;
     button.appendChild(sub);
 
-    button.addEventListener("click", () => startRound(currentMode, key));
+    button.addEventListener("click", () => {
+      currentCategory = key;
+      goToModeScreen();
+    });
     li.appendChild(button);
     list.appendChild(li);
   }
@@ -625,6 +628,7 @@ function renderCategoryScreen() {
 function startRound(mode, categoryKey, options = {}) {
   stopTimer();
   currentMode = mode;
+  currentCategory = categoryKey;
   const items = options.items ? options.items : buildRound(QUESTIONS, categoryKey);
   if (items.length === 0) {
     showFatal("이 카테고리의 문항을 불러올 수 없습니다. questions.js를 확인해 주세요.");
@@ -738,7 +742,9 @@ function onHintClick() {
     button.classList.add("is-removed");
   }
 
-  byId("quiz-hint").disabled = true;
+  const hintButton = byId("quiz-hint");
+  hintButton.textContent = "힌트 사용함";
+  hintButton.disabled = true;
 }
 
 function onChoiceClick(choiceIndex) {
@@ -866,7 +872,11 @@ function renderResultItems() {
 
     const verdict = document.createElement("span");
     verdict.className = "ri-verdict";
-    verdict.textContent = result.timedOut ? "시간 초과" : result.correct ? "정답" : "오답";
+    verdict.textContent = result.timedOut
+      ? "시간 초과"
+      : result.correct
+        ? (result.usedHint ? "정답 (힌트 0.5점)" : "정답")
+        : "오답";
     li.appendChild(verdict);
 
     const question = document.createElement("span");
@@ -901,11 +911,11 @@ function init() {
   byId("quiz-hint").addEventListener("click", onHintClick);
   byId("result-retry-wrong").addEventListener("click", onRetryWrongClick);
   byId("result-again").addEventListener("click", () => startRound(session.mode, session.categoryKey));
-  byId("result-to-category").addEventListener("click", goToModeScreen);
+  byId("result-to-category").addEventListener("click", goToCategoryScreen);
 
-  byId("category-to-mode").addEventListener("click", goToModeScreen);
+  byId("mode-to-category").addEventListener("click", goToCategoryScreen);
 
-  goToModeScreen();
+  goToCategoryScreen();
 }
 
 // ===== 6. 시작 =====
