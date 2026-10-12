@@ -648,6 +648,7 @@ function renderQuestion() {
   });
 
   byId("quiz-feedback").classList.add("hidden");
+  renderHintButton();
   startTimer();
 }
 
@@ -700,10 +701,37 @@ function onTimeout() {
   updateHud();
 }
 
+function renderHintButton() {
+  const button = byId("quiz-hint");
+  if (!session || session.mode !== "hint") {
+    button.classList.add("hidden");
+    return;
+  }
+  button.classList.remove("hidden");
+  button.disabled = false;
+  button.textContent = "힌트 (오답 2개 지우기)";
+}
+
+function onHintClick() {
+  // 답을 고른 뒤에는 쓸 수 없고, 한 문항에 한 번만 쓸 수 있다 (PRD 2.2).
+  if (!session || session.mode !== "hint" || session.locked || session.hintUsed) return;
+  session.hintUsed = true;
+
+  for (const index of pickHintRemovals(currentItem(session))) {
+    const button = byId("quiz-choices").querySelector(`button[data-index="${index}"]`);
+    if (!button) continue;
+    button.disabled = true;
+    button.classList.add("is-removed");
+  }
+
+  byId("quiz-hint").disabled = true;
+}
+
 function onChoiceClick(choiceIndex) {
   const outcome = applyAnswer(session, choiceIndex);
   if (outcome === null) return;   // 이미 채점한 문항 (리뷰 중점 3)
   stopTimer();                    // 해설을 읽는 시간은 제한하지 않는다
+  byId("quiz-hint").disabled = true;
   revealAnswer(choiceIndex);
   renderFeedback(outcome.correct, false);
   updateHud();
@@ -846,6 +874,7 @@ function init() {
   showDataWarning(warnings.length);
 
   byId("quiz-next").addEventListener("click", onNextClick);
+  byId("quiz-hint").addEventListener("click", onHintClick);
   byId("result-again").addEventListener("click", () => startRound(session.mode, session.categoryKey));
   byId("result-to-category").addEventListener("click", goToModeScreen);
 
