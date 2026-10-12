@@ -825,7 +825,17 @@ function renderResult() {
     hintBox.classList.add("hidden");
   }
 
+  byId("result-retry-wrong").classList.toggle("hidden", !canRetryWrong(session));
   renderResultItems();
+}
+
+function onRetryWrongClick() {
+  if (!canRetryWrong(session)) return;
+  // 새 판을 만들므로 원래 판의 점수는 건드려지지 않는다 (PRD 2.2).
+  startRound("practice", session.categoryKey, {
+    isReview: true,
+    items: wrongItemsOf(session)
+  });
 }
 
 // 문항별로 정답·오답과 정답 보기를 함께 보여 준다. 사용자 입력은 textContent로만 넣는다.
@@ -875,6 +885,7 @@ function init() {
 
   byId("quiz-next").addEventListener("click", onNextClick);
   byId("quiz-hint").addEventListener("click", onHintClick);
+  byId("result-retry-wrong").addEventListener("click", onRetryWrongClick);
   byId("result-again").addEventListener("click", () => startRound(session.mode, session.categoryKey));
   byId("result-to-category").addEventListener("click", goToModeScreen);
 
