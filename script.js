@@ -197,6 +197,26 @@ function countHintUsed(session) {
   return session.results.filter(result => result.usedHint).length;
 }
 
+// 섞은 뒤의 보기를 기준으로 오답 3개 중 2개를 무작위로 고른다 (PRD 2.2).
+function pickHintRemovals(item, random = Math.random) {
+  const wrongIndexes = item.choices
+    .map((_, i) => i)
+    .filter(i => i !== item.answerIndex);
+  return shuffle(wrongIndexes, random).slice(0, 2);
+}
+
+// 복습에서도 문항과 보기 순서를 다시 섞는다.
+function wrongItemsOf(session, random = Math.random) {
+  const wrongIds = session.results.filter(result => !result.correct).map(result => result.id);
+  const wrongItems = session.items.filter(item => wrongIds.includes(item.id));
+  return shuffle(wrongItems, random).map(item => toRoundItem(item, random));
+}
+
+// 연습 모드(원판이든 복습이든)에서만, 틀린 문항이 있을 때만 쓸 수 있다.
+function canRetryWrong(session) {
+  return Boolean(session) && session.mode === "practice" && countWrong(session) > 0;
+}
+
 // ===== 3. 자체 점검 =====
 const SELF_TESTS = [];
 
@@ -402,6 +422,57 @@ selfTest("집계 함수는 맞힌 수와 틀린 수와 힌트 수를 센다", ch
 selfTest("실제 QUESTIONS가 검증을 통과한다", check => {
   const warnings = validateQuestions(QUESTIONS);
   check(warnings.length === 0, `경고 ${warnings.length}개: ${warnings.slice(0, 5).join(" / ")}`);
+});
+
+selfTest("pickHintRemovals는 오답 2개만 고르고 정답을 남긴다", check => {
+  const item = toRoundItem(makeQuestion("science", 1), () => 0.5);
+  for (let seed = 0; seed < 50; seed++) {
+    const removals = pickHintRemovals(item, () => (seed % 9) / 9);
+    check(removals.length === 2, `지울 보기 ${removals.length}개`);
+    check(!removals.includes(item.answerIndex), "정답을 지움");
+    check(new Set(removals).size === 2, "같은 보기를 두 번 지움");
+    check(removals.every(i => i >= 0 && i <= 3), `색인 범위 밖 ${removals.join()}`);
+  }
+});
+
+selfTest("wrongItemsOf는 틀린 문항만 담는다", check => {
+  const data = makeQuestionSet();
+  const session = createSession("practice", "science", buildRound(data, "science", () => 0));
+  session.results = session.items.map((item, i) => ({
+    id: item.id,
+    selectedIndex: 0,
+    correct: i < 7,
+    usedHint: false,
+    timedOut: false
+  }));
+  const wrongIds = session.results.filter(r => !r.correct).map(r => r.id).sort().join(",");
+  const review = wrongItemsOf(session, () => 0);
+  check(review.length === 3, `복습 문항 ${review.length}개`);
+  check(review.map(item => item.id).sort().join(",") === wrongIds, "복습 문항이 다름");
+  check(review.every(item => item.choices.length === 4), "보기가 4개가 아님");
+  check(review.every(item => item.choices[item.answerIndex].includes("정답")),
+    "복습 문항의 정답 위치가 틀림");
+});
+
+selfTest("canRetryWrong은 연습 모드에서 틀린 문항이 있을 때만 참이다", check => {
+  const data = makeQuestionSet();
+  const make = mode => createSession(mode, "science", buildRound(data, "science", () => 0));
+
+  const clean = make("practice");
+  clean.results = [{ id: "a", selectedIndex: 0, correct: true, usedHint: false, timedOut: false }];
+  check(canRetryWrong(clean) === false, "다 맞혔는데 참");
+
+  const dirty = make("practice");
+  dirty.results = [{ id: "a", selectedIndex: 0, correct: false, usedHint: false, timedOut: false }];
+  check(canRetryWrong(dirty) === true, "틀렸는데 거짓");
+
+  const speed = make("speed");
+  speed.results = [{ id: "a", selectedIndex: 0, correct: false, usedHint: false, timedOut: false }];
+  check(canRetryWrong(speed) === false, "스피드 모드인데 참");
+
+  const review = createSession("practice", "science", buildRound(data, "science", () => 0), { isReview: true });
+  review.results = [{ id: "a", selectedIndex: 0, correct: false, usedHint: false, timedOut: false }];
+  check(canRetryWrong(review) === true, "복습에서 또 틀렸는데 거짓");
 });
 // ===== 4. 상태 =====
 let session = null;
