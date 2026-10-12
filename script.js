@@ -23,6 +23,26 @@ const CATEGORY_LABELS = {
   arts_culture: "예술과 문화"
 };
 const MODE_LABELS = { practice: "연습", speed: "스피드", hint: "힌트" };
+const MODE_INFO = [
+  {
+    key: "practice",
+    label: "연습",
+    rule: "시간 제한과 힌트 없이 천천히 푼다. 틀린 문제를 다시 풀 수 있다.",
+    ranked: false
+  },
+  {
+    key: "speed",
+    label: "스피드",
+    rule: "문항마다 15초. 시간이 지나면 오답으로 처리한다.",
+    ranked: true
+  },
+  {
+    key: "hint",
+    label: "힌트",
+    rule: "문항마다 힌트 1번. 힌트를 쓰고 맞히면 0.5점.",
+    ranked: true
+  }
+];
 const QUESTIONS_PER_ROUND = 10;
 
 // ===== 2. 순수 로직 =====
@@ -516,6 +536,45 @@ function categoryLabel(categoryKey) {
   return category && category.label ? category.label : categoryKey;
 }
 
+function renderModeScreen() {
+  const list = byId("mode-list");
+  list.textContent = "";
+
+  for (const mode of MODE_INFO) {
+    const li = document.createElement("li");
+    const button = document.createElement("button");
+    button.type = "button";
+    button.dataset.mode = mode.key;
+    button.textContent = mode.label;
+
+    const sub = document.createElement("span");
+    sub.className = "pick-sub";
+    sub.textContent = mode.rule;
+    button.appendChild(sub);
+
+    if (!mode.ranked) {
+      const warn = document.createElement("span");
+      warn.className = "pick-warn";
+      warn.textContent = "순위표에 기록되지 않음";
+      button.appendChild(warn);
+    }
+
+    button.addEventListener("click", () => {
+      currentMode = mode.key;
+      renderCategoryScreen();
+      showScreen("screen-category");
+    });
+
+    li.appendChild(button);
+    list.appendChild(li);
+  }
+}
+
+function goToModeScreen() {
+  renderModeScreen();
+  showScreen("screen-mode");
+}
+
 function renderCategoryScreen() {
   // 시작 화면에 모드를 적고, 연습 모드면 순위표 미기록을 함께 알린다 (PRD 2.2).
   const modeNote = `${MODE_LABELS[currentMode]} 모드`;
@@ -738,8 +797,9 @@ function init() {
     showScreen("screen-category");
   });
 
-  renderCategoryScreen();
-  showScreen("screen-category");
+  byId("category-to-mode").addEventListener("click", goToModeScreen);
+
+  goToModeScreen();
 }
 
 // ===== 6. 시작 =====
